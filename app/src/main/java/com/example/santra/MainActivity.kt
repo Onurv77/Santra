@@ -5,19 +5,24 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -27,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +46,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.santra.ui.theme.SantraTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +64,7 @@ fun AppNavigation() {
 
     NavHost(navController = navController, startDestination = "login") {
         composable("login") { LoginScreen(navController) }
-        composable("home") { HomeScreen() }
+        composable("home") { HomeScreenWithDrawer(navController) }
         composable("register") { RegisterScreen(navController) }
     }
 }
@@ -184,16 +191,29 @@ fun LoginScreen(navController: NavController) {
 
 }
 
-
+/*
 @Composable
 fun HomeScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+    val items = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5")
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
-        Text("Ana Sayfa")
+        items(items) { item ->
+            Text(
+                text = item,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+                    .background(Color.LightGray)
+                    .padding(16.dp)
+            )
+        }
     }
-}
+}*/
 
 @Composable
 fun RegisterScreen(navController: NavController) {
@@ -207,5 +227,97 @@ fun RegisterScreen(navController: NavController) {
         Button(onClick = { navController.popBackStack() }) {
             Text("Geri Dön")
         }
+    }
+}
+
+@Composable
+fun HomeScreenWithDrawer(navController: NavController) {
+
+    val drawerState = remember { androidx.compose.material3.DrawerState(initialValue = androidx.compose.material3.DrawerValue.Closed) }
+    val scope = rememberCoroutineScope()
+
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            DrawerContent(navController)
+        },
+        content = {
+            Box(modifier = Modifier.fillMaxSize()) {
+
+                LazyColumnContent(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(16.dp)
+                )
+
+
+                Button(
+                    onClick = { scope.launch { drawerState.open() } },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(16.dp)
+                        .width(56.dp)
+                        .height(56.dp)
+                ) {
+                    Text("☰") // Çekmece simgesi
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun LazyColumnContent(modifier: Modifier = Modifier) {
+
+    LazyColumn(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(20) { index ->
+            Text(
+                text = "Eleman $index",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .background(color = Color(0xFFF5F5F5))
+                    .padding(16.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun DrawerContent(navController: NavController) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .background(Color.White)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Top
+    ) {
+        Text(
+            text = "Ana Sayfa",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .clickable { navController.navigate("home") }
+        )
+        Text(
+            text = "Profil",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .clickable { /* Profil'e gitmek için işlemler */ }
+        )
+        Text(
+            text = "Ayarlar",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .clickable { /* Ayarlar sayfasına yönlendir */ }
+        )
     }
 }
