@@ -43,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -199,6 +200,13 @@ fun LoginScreen(navController: NavController) {
             .fillMaxSize()
             .background(color = Color.White) // Beyaz arka plan
     ) {
+        Image(
+            painter = painterResource(R.drawable.santrabackground),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -208,7 +216,7 @@ fun LoginScreen(navController: NavController) {
         ) {
             // Logo
             Image(
-                painter = painterResource(R.drawable.santramain),
+                painter = painterResource(R.drawable.santralogo),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -220,7 +228,7 @@ fun LoginScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
-                    .background(color = Color(0xFF31B700))
+                    //.background(color = Color(0xFF31B700))
                     .padding(vertical = 8.dp)
             ) {
                 Text(
@@ -246,7 +254,9 @@ fun LoginScreen(navController: NavController) {
                     .padding(vertical = 8.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFF31B700),
-                    unfocusedBorderColor = Color.LightGray
+                    unfocusedBorderColor = Color.LightGray,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
                 )
             )
 
@@ -272,7 +282,9 @@ fun LoginScreen(navController: NavController) {
                     .padding(vertical = 8.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFF31B700),
-                    unfocusedBorderColor = Color.LightGray
+                    unfocusedBorderColor = Color.LightGray,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
                 )
             )
 
@@ -305,14 +317,14 @@ fun LoginScreen(navController: NavController) {
     }
 }
 
-/*
+
 @Preview
 @Composable
 fun previewScreen() {
     val navController = rememberNavController()
     LoginScreen(navController)
 }
- */
+
 
 /*
 @Composable
