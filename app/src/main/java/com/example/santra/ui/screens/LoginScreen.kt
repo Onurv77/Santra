@@ -36,8 +36,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.santra.R
 
 @Composable
@@ -168,4 +170,11 @@ fun LoginScreen(navController: NavController) {
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun previewScreen() {
+    val navController = rememberNavController()
+    LoginScreen(navController)
 }
