@@ -175,10 +175,9 @@ fun RegisterScreen(navController: NavController) {
     }
 }
 
-
 @Preview
 @Composable
-fun previewScreen() {
+fun PreviewScreen(){
     val navController = rememberNavController()
     RegisterScreen(navController)
 }
