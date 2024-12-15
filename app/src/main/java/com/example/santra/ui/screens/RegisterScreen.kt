@@ -39,27 +39,14 @@ import com.example.santra.R
 import com.example.santra.data.AppDatabase
 import com.example.santra.data.dao.SantraDao
 import com.example.santra.data.entities.LoginTable
+import com.example.santra.domain.viewmodels.RegisterViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun RegisterScreen(navController: NavController, db:AppDatabase) {
-
-    //val context = LocalContext.current
-
-    //val db = AppDatabase.getDatabase(context)
-
-    //val db = Room.databaseBuilder(
-    //    context,
-    //    AppDatabase::class.java, "Santra_Database"
-    //).build()
-
-    val coroutineScope = rememberCoroutineScope()
-
-    val santraDao = db.santraDao()
-
+fun RegisterScreen(navController: NavController, registerViewModel: RegisterViewModel) {
 
     var StudentNumber by remember { mutableStateOf("") }
     var StudentMail by remember { mutableStateOf("") }
@@ -160,11 +147,10 @@ fun RegisterScreen(navController: NavController, db:AppDatabase) {
             ) {
                 Button(
                     onClick = {
-                        coroutineScope.launch(Dispatchers.IO) {
-                            val newUser = LoginTable(StudentNumber = StudentNumber, StudentMail = StudentMail, StudentPassword = StudentPassword )
-                            santraDao.insertAll(newUser)
+                        if (StudentMail != "" && StudentNumber != "" && StudentPassword != "") {
+                            registerViewModel.insertUser(studentNumber = StudentNumber, studentMail = StudentMail, studentPassword = StudentPassword)
+                            navController.navigate("login")
                         }
-
                     },
                     colors = ButtonDefaults.buttonColors(Color(0xFF31B700)),
                     modifier = Modifier.weight(1f)
