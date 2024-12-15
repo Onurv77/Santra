@@ -27,20 +27,33 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.santra.R
+import com.example.santra.data.AppDatabase
+import com.example.santra.data.dao.SantraDao
+import com.example.santra.data.entities.LoginTable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 @Composable
 fun RegisterScreen(navController: NavController) {
 
-    var studentId by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var mail by remember { mutableStateOf("") }
+    val context = LocalContext.current
+
+    val db = AppDatabase.getDatabase(context)
+    val santraDao = db.santraDao()
+
+
+    var StudentNumber by remember { mutableStateOf("") }
+    var StudentMail by remember { mutableStateOf("") }
+    var StudentPassword by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
@@ -75,8 +88,8 @@ fun RegisterScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(8.dp))
 
             TextField(
-                value = studentId,
-                onValueChange = {studentId = it},
+                value = StudentNumber,
+                onValueChange = {StudentNumber = it},
                 //label = { Text("Öğrenci Numarası")},
                 shape = RoundedCornerShape(12.dp),
                 colors = TextFieldDefaults.colors(
@@ -86,26 +99,8 @@ fun RegisterScreen(navController: NavController) {
                 )
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
 
-            //Username
-            Text(
-                text = "Kullanıcı Adınızı Giriniz:",
-                color = Color.White
-            )
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            TextField(
-                value = username,
-                onValueChange = {username = it},
-                shape = RoundedCornerShape(12.dp),
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
-                )
-            )
 
             Spacer(modifier = Modifier.height(8.dp))
             //Mail
@@ -117,8 +112,8 @@ fun RegisterScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(8.dp))
 
             TextField(
-                value = mail,
-                onValueChange = {mail = it},
+                value = StudentMail,
+                onValueChange = {StudentMail = it},
                 shape = RoundedCornerShape(12.dp),
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
@@ -137,8 +132,8 @@ fun RegisterScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(8.dp))
 
             TextField(
-                value = password,
-                onValueChange = {password = it},
+                value = StudentPassword,
+                onValueChange = {StudentPassword = it},
                 shape = RoundedCornerShape(12.dp),
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
@@ -154,7 +149,13 @@ fun RegisterScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Button(
-                    onClick = { /*  */ },
+                    onClick = {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val newUser = LoginTable(StudentNumber = StudentNumber, StudentMail = StudentMail, StudentPassword = StudentPassword )
+                            santraDao.insertAll(newUser)
+                        }
+
+                    },
                     colors = ButtonDefaults.buttonColors(Color(0xFF31B700)),
                     modifier = Modifier.weight(1f)
                 ) {

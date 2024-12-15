@@ -11,7 +11,7 @@ interface SantraDao {
     fun getAll(): List<LoginTable>
 
     @Insert
-    fun insertAll(vararg logintableinsert: LoginTable)
+    suspend fun insertAll(logintableinsert: LoginTable)
 
 }
 
