@@ -27,19 +27,8 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-
-
         setContent {
                 AppNavigation(db)
             }
         }
     }
-
-/*
-@Preview
-@Composable
-fun previewScreen() {
-    val navController = rememberNavController()
-    RegisterScreen(navController)
-}
-*/

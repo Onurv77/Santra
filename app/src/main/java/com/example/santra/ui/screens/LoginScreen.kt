@@ -182,9 +182,3 @@ fun LoginScreen(navController: NavController, db:AppDatabase) {
     }
 }
 
-@Preview
-@Composable
-fun previewScreen() {
-    val navController = rememberNavController()
-    LoginScreen(navController)
-}
