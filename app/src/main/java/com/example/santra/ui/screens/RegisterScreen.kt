@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
 import com.example.santra.R
 import com.example.santra.data.AppDatabase
 import com.example.santra.data.dao.SantraDao
@@ -47,7 +48,13 @@ fun RegisterScreen(navController: NavController) {
 
     val context = LocalContext.current
 
-    val db = AppDatabase.getDatabase(context)
+    //val db = AppDatabase.getDatabase(context)
+
+    val db = Room.databaseBuilder(
+        context,
+        AppDatabase::class.java, "Santra_Database"
+    ).build()
+
     val santraDao = db.santraDao()
 
 
