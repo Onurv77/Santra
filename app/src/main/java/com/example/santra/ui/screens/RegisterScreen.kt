@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,16 +45,18 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun RegisterScreen(navController: NavController) {
+fun RegisterScreen(navController: NavController, db:AppDatabase) {
 
-    val context = LocalContext.current
+    //val context = LocalContext.current
 
     //val db = AppDatabase.getDatabase(context)
 
-    val db = Room.databaseBuilder(
-        context,
-        AppDatabase::class.java, "Santra_Database"
-    ).build()
+    //val db = Room.databaseBuilder(
+    //    context,
+    //    AppDatabase::class.java, "Santra_Database"
+    //).build()
+
+    val coroutineScope = rememberCoroutineScope()
 
     val santraDao = db.santraDao()
 
@@ -157,7 +160,7 @@ fun RegisterScreen(navController: NavController) {
             ) {
                 Button(
                     onClick = {
-                        CoroutineScope(Dispatchers.IO).launch {
+                        coroutineScope.launch(Dispatchers.IO) {
                             val newUser = LoginTable(StudentNumber = StudentNumber, StudentMail = StudentMail, StudentPassword = StudentPassword )
                             santraDao.insertAll(newUser)
                         }
@@ -183,9 +186,9 @@ fun RegisterScreen(navController: NavController) {
     }
 }
 
-@Preview
-@Composable
-fun PreviewScreen(){
-    val navController = rememberNavController()
-    RegisterScreen(navController)
-}
+//@Preview
+//@Composable
+//fun PreviewScreen(){
+//    val navController = rememberNavController()
+//    RegisterScreen(navController)
+//}
