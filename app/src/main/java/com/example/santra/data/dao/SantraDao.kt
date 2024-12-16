@@ -13,5 +13,9 @@ interface SantraDao {
     @Insert
     suspend fun insertAll(logintableinsert: LoginTable)
 
+
+    @Query("SELECT * FROM LoginTable WHERE StudentNumber = :studentNumber AND StudentPassword = :studentPassword")
+    fun login(studentNumber: String, studentPassword: String): LoginTable?
+
 }
 
