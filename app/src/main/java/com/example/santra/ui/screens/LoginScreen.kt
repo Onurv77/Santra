@@ -1,5 +1,6 @@
 package com.example.santra.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -44,16 +46,15 @@ import androidx.navigation.compose.rememberNavController
 import com.example.santra.R
 import com.example.santra.data.AppDatabase
 import com.example.santra.data.dao.SantraDao
+import com.example.santra.domain.viewmodels.LoginViewModel
 
 @Composable
-fun LoginScreen(navController: NavController, db:AppDatabase) {
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
+    var StudentNumber by remember { mutableStateOf("") }
+    var StudentPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) } // Şifre göster/gizle için
+    val context = LocalContext.current
 
-    val santraDao = db.santraDao()
-
-    val coroutineScope = rememberCoroutineScope()
 
 
 
@@ -106,8 +107,8 @@ fun LoginScreen(navController: NavController, db:AppDatabase) {
 
             // Kullanıcı Adı OutlinedTextField
             OutlinedTextField(
-                value = username,
-                onValueChange = { username = it },
+                value = StudentNumber,
+                onValueChange = { StudentNumber = it },
                 label = { Text("Kullanıcı Adı") },
                 placeholder = { Text("Kullanıcı adınızı girin") },
                 singleLine = true,
@@ -126,8 +127,8 @@ fun LoginScreen(navController: NavController, db:AppDatabase) {
 
             // Şifre OutlinedTextField
             OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
+                value = StudentPassword,
+                onValueChange = { StudentPassword = it },
                 label = { Text("Şifre") },
                 placeholder = { Text("Şifrenizi girin") },
                 singleLine = true,
@@ -161,7 +162,23 @@ fun LoginScreen(navController: NavController, db:AppDatabase) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Button(
-                    onClick = { navController.navigate("home") },
+                    onClick = {
+
+                         if (StudentNumber.isNotBlank() && StudentPassword.isNotBlank()){
+
+                             loginViewModel.login(StudentNumber, StudentPassword)
+                             navController.navigate("home")
+                         }
+                        else{
+
+
+                            Toast.makeText(context, "Kullanıcı Numarası veya Şifresi geçersiz", Toast.LENGTH_LONG).show()
+
+                        }
+
+
+
+                    },
                     modifier = Modifier.weight(1f),
                     colors = androidx.compose.material3.ButtonDefaults.buttonColors(Color(0xFF31B700))
                 ) {
@@ -181,4 +198,6 @@ fun LoginScreen(navController: NavController, db:AppDatabase) {
         }
     }
 }
+
+
 
