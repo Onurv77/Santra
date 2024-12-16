@@ -26,6 +26,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -54,8 +55,7 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
     var StudentPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) } // Şifre göster/gizle için
     val context = LocalContext.current
-
-
+    val loginState by loginViewModel.loginState.observeAsState()
 
 
 
@@ -164,18 +164,20 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
                 Button(
                     onClick = {
 
-                         if (StudentNumber.isNotBlank() && StudentPassword.isNotBlank()){
+                        if (StudentNumber.isNotBlank() && StudentPassword.isNotBlank()) {
 
-                             loginViewModel.login(StudentNumber, StudentPassword)
-                             navController.navigate("home")
-                         }
-                        else{
+                            loginViewModel.login(StudentNumber, StudentPassword)
+                            navController.navigate("home")
+                        } else {
 
 
-                            Toast.makeText(context, "Kullanıcı Numarası veya Şifresi geçersiz", Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                context,
+                                "Kullanıcı Numarası veya Şifresi geçersiz",
+                                Toast.LENGTH_LONG
+                            ).show()
 
                         }
-
 
 
                     },
@@ -185,14 +187,34 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
                     Text("Giriş Yap")
                 }
 
-                Spacer(modifier = Modifier.width(16.dp))
 
-                Button(
-                    onClick = { navController.navigate("register") },
-                    modifier = Modifier.weight(1f),
-                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(Color(0xFF31B700))
-                ) {
-                    Text("Kaydol")
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    Button(
+                        onClick = { navController.navigate("register") },
+                        modifier = Modifier.weight(1f),
+                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                            Color(
+                                0xFF31B700
+                            )
+                        )
+                    ) {
+                        Text("Kaydol")
+                    }
+
+                loginState?.let { isLoggedIn ->
+                    // Eğer giriş başarılıysa
+                    if (isLoggedIn) {
+                        navController.navigate("home") // Ana ekrana yönlendir
+                    } else {
+                        // Eğer giriş başarısızsa, hata mesajı göster
+                        Toast.makeText(
+                            context,
+                            "Hatalı e-posta veya şifre",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
                 }
             }
         }
