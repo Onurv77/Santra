@@ -57,6 +57,29 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
     val context = LocalContext.current
     val loginState by loginViewModel.loginState.observeAsState()
 
+    var toastShown by remember { mutableStateOf(false) }
+
+
+    loginState?.let { isLoggedIn ->
+        if (isLoggedIn) {
+
+            if (!toastShown) {
+                navController.navigate("home") {
+                    popUpTo("login") { inclusive = true }
+                }
+                toastShown = true
+            }
+        } else {
+            if (!toastShown) {
+                Toast.makeText(
+                    context,
+                    "Kullanıcı Numarası veya Şifresi geçersiz",
+                    Toast.LENGTH_LONG
+                ).show()
+                toastShown = true
+            }
+        }
+    }
 
 
     Box(
@@ -163,23 +186,16 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
             ) {
                 Button(
                     onClick = {
-
                         if (StudentNumber.isNotBlank() && StudentPassword.isNotBlank()) {
-
                             loginViewModel.login(StudentNumber, StudentPassword)
-                            navController.navigate("home")
+                            toastShown = false
                         } else {
-
-
                             Toast.makeText(
                                 context,
-                                "Kullanıcı Numarası veya Şifresi geçersiz",
+                                "Kullanıcı Numarası veya Şifresi boş",
                                 Toast.LENGTH_LONG
                             ).show()
-
                         }
-
-
                     },
                     modifier = Modifier.weight(1f),
                     colors = androidx.compose.material3.ButtonDefaults.buttonColors(Color(0xFF31B700))
@@ -202,20 +218,6 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
                         Text("Kaydol")
                     }
 
-                loginState?.let { isLoggedIn ->
-                    // Eğer giriş başarılıysa
-                    if (isLoggedIn) {
-                        navController.navigate("home") // Ana ekrana yönlendir
-                    } else {
-                        // Eğer giriş başarısızsa, hata mesajı göster
-                        Toast.makeText(
-                            context,
-                            "Hatalı e-posta veya şifre",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-
-                }
             }
         }
     }
