@@ -88,7 +88,7 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
             .background(color = Color.White)
     ) {
         Image(
-            painter = painterResource(R.drawable.santrabackground),
+            painter = painterResource(R.drawable.santra_background),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
