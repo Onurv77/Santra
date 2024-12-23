@@ -59,7 +59,7 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
         contentAlignment = Alignment.TopStart
     ) {
         Image(
-            painter = painterResource(R.drawable.santrabackground),
+            painter = painterResource(R.drawable.santra_background),
             contentDescription = null,
             modifier = Modifier.fillMaxHeight(),
             contentScale = ContentScale.FillHeight
