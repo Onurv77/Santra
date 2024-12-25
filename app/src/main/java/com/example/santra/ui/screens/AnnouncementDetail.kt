@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
@@ -56,7 +58,7 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
         Scaffold(
             containerColor = Color.Transparent,
             topBar = { TopBarContent() },
-            bottomBar = { BottomBarContent() }
+            bottomBar = { BottomBarContent(navController) }
         ) { paddingValues ->
             Box(
                 modifier = Modifier
@@ -103,25 +105,18 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
                             style = MaterialTheme.typography.bodySmall
                         )
 
-                        Row(
-                            verticalAlignment = Alignment.Bottom,
-                            horizontalArrangement = Arrangement.Absolute.SpaceBetween,
-                            modifier = Modifier.padding(50.dp)
+                        FilledTonalButton(
+                            onClick = { },
+                            shape = RoundedCornerShape(8.dp),
+                            modifier = Modifier.width(100.dp)
+                                .align(Alignment.CenterHorizontally),
+                            colors = ButtonDefaults.buttonColors(
+                                Color(0XFF5091B1)
+                            )
                         ) {
-
-                            FilledTonalButton(onClick = { }) {
-                                Text("Katıl", style = MaterialTheme.typography.labelLarge)
-                            }
-
-                            Spacer(modifier = Modifier.width(50.dp))
-
-                            FilledTonalButton(onClick = { navController.navigate("home") }) {
-                                Text("Geri Dön", style = MaterialTheme.typography.labelLarge)
-                            }
-
+                            Text("Katıl", style = MaterialTheme.typography.labelLarge)
                         }
                     }
-
                 }
             }
         }
