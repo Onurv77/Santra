@@ -2,6 +2,7 @@ package com.example.santra.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +19,7 @@ import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,6 +36,8 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.santra.R
+import com.example.santra.ui.components.BottomBarContent
+import com.example.santra.ui.components.TopBarContent
 
 @Composable
 fun AnnouncementDetailScreen(navController: NavController, announcementId: String?) {
@@ -48,68 +52,80 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
             contentScale = ContentScale.FillBounds
         )
 
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
 
-            Card(
+        Scaffold(
+            containerColor = Color.Transparent,
+            topBar = { TopBarContent() },
+            bottomBar = { BottomBarContent() }
+        ) { paddingValues ->
+            Box(
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(30.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.outlinedCardColors(Color.White)
+                    .fillMaxSize()
+                    .padding(paddingValues)
             ) {
-                Image(
-                    contentDescription = null,
-                    painter = painterResource(R.drawable.account_circle),
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
-
-                Text(text = "Username", modifier = Modifier.align(Alignment.CenterHorizontally))
-
-                Spacer(modifier = Modifier.height(50.dp))
-
-                Text(
-                    text = "${toNumber+1}. İlan",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier
-                        .padding(start = 60.dp)
-                )
-
-                Spacer(modifier = Modifier.height(50.dp))
-
-                Text(
-                    text = "Bu, ilan açıklaması. Detaylı bilgi için tıklayın.",
-                    modifier = Modifier
-                        .padding(20.dp)
-                        .padding(bottom = 50.dp),
-                    style = MaterialTheme.typography.bodySmall
-                )
-
-                Row(
-                    verticalAlignment = Alignment.Bottom,
-                    horizontalArrangement = Arrangement.Absolute.SpaceBetween,
-                    modifier = Modifier.padding(50.dp)
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    FilledTonalButton(onClick = { }) {
-                        Text("Katıl", style = MaterialTheme.typography.labelLarge)
-                    }
+                    Card(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(30.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.outlinedCardColors(Color.White)
+                    ) {
+                        Image(
+                            contentDescription = null,
+                            painter = painterResource(R.drawable.account_circle),
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
 
-                    Spacer(modifier = Modifier.width(50.dp))
+                        Text(text = "Username", modifier = Modifier.align(Alignment.CenterHorizontally))
 
-                    FilledTonalButton(onClick = { navController.navigate("home") }) {
-                        Text("Geri Dön", style = MaterialTheme.typography.labelLarge)
+                        Spacer(modifier = Modifier.height(50.dp))
+
+                        Text(
+                            text = "${toNumber+1}. İlan",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier
+                                .padding(start = 60.dp)
+                        )
+
+                        Spacer(modifier = Modifier.height(50.dp))
+
+                        Text(
+                            text = "Bu, ilan açıklaması. Detaylı bilgi için tıklayın.",
+                            modifier = Modifier
+                                .padding(20.dp)
+                                .padding(bottom = 50.dp),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+
+                        Row(
+                            verticalAlignment = Alignment.Bottom,
+                            horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+                            modifier = Modifier.padding(50.dp)
+                        ) {
+
+                            FilledTonalButton(onClick = { }) {
+                                Text("Katıl", style = MaterialTheme.typography.labelLarge)
+                            }
+
+                            Spacer(modifier = Modifier.width(50.dp))
+
+                            FilledTonalButton(onClick = { navController.navigate("home") }) {
+                                Text("Geri Dön", style = MaterialTheme.typography.labelLarge)
+                            }
+
+                        }
                     }
 
                 }
             }
-
         }
-
-}
+    }
 
 @Preview
 @Composable
