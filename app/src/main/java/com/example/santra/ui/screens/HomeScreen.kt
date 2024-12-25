@@ -24,7 +24,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.santra.R
 import com.example.santra.ui.components.DrawerContent
-import com.example.santra.ui.components.LazyColumnContent
+import com.example.santra.ui.components.LazyRowContent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -161,11 +161,7 @@ fun Content(navController: NavController, drawerState: DrawerState, scope: Corou
         WarningMessage()
 
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            LazyColumnContent(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                navController = navController
-            )
+            LazyRowContent(navController)
 
             OpenDrawerButton(drawerState, scope)
         }
