@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -23,8 +24,10 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.santra.R
+import com.example.santra.ui.components.BottomBarContent
 import com.example.santra.ui.components.DrawerContent
 import com.example.santra.ui.components.LazyRowContent
+import com.example.santra.ui.components.TopBarContent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -32,6 +35,13 @@ import kotlinx.coroutines.launch
 fun HomeScreen(navController: NavController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    Image(
+        painter = painterResource(id = R.drawable.santra_background),
+        contentDescription = "Background",
+        modifier = Modifier.fillMaxSize()
+            .blur(16.dp),
+        contentScale = ContentScale.FillBounds
+    )
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -40,22 +50,18 @@ fun HomeScreen(navController: NavController) {
         }
     ) {
         // Arka plan resmi ve diğer bileşenler için Surface kullanımı
-        Surface(modifier = Modifier.fillMaxSize()) {
+        Surface(modifier = Modifier.fillMaxSize(),
+            color = Color.Transparent) {
             Box(
                 modifier = Modifier.fillMaxSize()
             ) {
-                // Arka plan resmini yerleştiriyoruz
-                Image(
-                    painter = painterResource(id = R.drawable.santra_background),
-                    contentDescription = "Background",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
+
 
                 // Scaffold içeriklerini arka planda değil, üstte göstermek
                 Scaffold(
-                    topBar = { HomeTopBar() },
-                    bottomBar = { HomeBottomBar() }
+                    containerColor = Color.Transparent,
+                    topBar = { TopBarContent() },
+                    bottomBar = { BottomBarContent() }
                 ) { paddingValues ->
                     Box(
                         modifier = Modifier
@@ -67,84 +73,6 @@ fun HomeScreen(navController: NavController) {
                 }
             }
         }
-    }
-}
-
-
-@Composable
-fun HomeTopBar() {
-    Column {
-        androidx.compose.material.TopAppBar(
-            backgroundColor = Color.Transparent,
-            elevation = 0.dp
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.home_screen_logo),
-                    contentDescription = "Logo",
-                    modifier = Modifier.size(60.dp)
-                )
-                Icon(
-                    painter = painterResource(id = R.drawable.settings_icon),
-                    contentDescription = "Settings",
-                    modifier = Modifier
-                        .size(60.dp)
-                        .clickable { /* Handle click */ }
-                )
-            }
-        }
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(Color.Gray)
-        )
-    }
-}
-
-@Composable
-fun HomeBottomBar() {
-    BottomNavigation(
-        backgroundColor = Color(0xFF4CAF50),
-        elevation = 8.dp
-    ) {
-        BottomNavigationItem(
-            icon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.chat_icon),
-                    contentDescription = "Chat",
-                    modifier = Modifier.size(50.dp)
-                )
-            },
-            selected = false,
-            onClick = { /* Handle click */ }
-        )
-        BottomNavigationItem(
-            icon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.add_announcement_1),
-                    contentDescription = "Add",
-                    modifier = Modifier.size(30.dp)
-                )
-            },
-            selected = false,
-            onClick = { /* Handle click */ }
-        )
-        BottomNavigationItem(
-            icon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.profile_icon),
-                    contentDescription = "Profile",
-                    modifier = Modifier.size(50.dp)
-                )
-            },
-            selected = false,
-            onClick = { /* Handle click */ }
-        )
     }
 }
 
@@ -245,6 +173,88 @@ fun PreviewScreen() {
     val navController = rememberNavController()
     HomeScreen(navController)
 }
+
+/*
+@Composable
+fun HomeTopBar() {
+    Column {
+        androidx.compose.material.TopAppBar(
+            backgroundColor = Color.Transparent,
+            elevation = 0.dp
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.home_screen_logo),
+                    contentDescription = "Logo",
+                    modifier = Modifier.size(60.dp)
+                )
+                Icon(
+                    painter = painterResource(id = R.drawable.settings_icon),
+                    contentDescription = "Settings",
+                    modifier = Modifier
+                        .size(60.dp)
+                        .clickable { /* Handle click */ }
+                )
+            }
+        }
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(Color.Gray)
+        )
+    }
+}
+*/
+
+
+/*
+@Composable
+fun HomeBottomBar() {
+    BottomNavigation(
+        backgroundColor = Color(0xFF4CAF50),
+        elevation = 8.dp
+    ) {
+        BottomNavigationItem(
+            icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.chat_icon),
+                    contentDescription = "Chat",
+                    modifier = Modifier.size(50.dp)
+                )
+            },
+            selected = false,
+            onClick = { /* Handle click */ }
+        )
+        BottomNavigationItem(
+            icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.add_announcement_1),
+                    contentDescription = "Add",
+                    modifier = Modifier.size(30.dp)
+                )
+            },
+            selected = false,
+            onClick = { /* Handle click */ }
+        )
+        BottomNavigationItem(
+            icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.profile_icon),
+                    contentDescription = "Profile",
+                    modifier = Modifier.size(50.dp)
+                )
+            },
+            selected = false,
+            onClick = { /* Handle click */ }
+        )
+    }
+}*/
+
 
 /*package com.example.santra.ui.screens
 
