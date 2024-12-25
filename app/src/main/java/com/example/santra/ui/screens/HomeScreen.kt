@@ -49,19 +49,17 @@ fun HomeScreen(navController: NavController) {
             DrawerContent(navController)
         }
     ) {
-        // Arka plan resmi ve diğer bileşenler için Surface kullanımı
+
         Surface(modifier = Modifier.fillMaxSize(),
             color = Color.Transparent) {
             Box(
                 modifier = Modifier.fillMaxSize()
             ) {
 
-
-                // Scaffold içeriklerini arka planda değil, üstte göstermek
                 Scaffold(
                     containerColor = Color.Transparent,
                     topBar = { TopBarContent() },
-                    bottomBar = { BottomBarContent() }
+                    bottomBar = { BottomBarContent(navController) }
                 ) { paddingValues ->
                     Box(
                         modifier = Modifier
