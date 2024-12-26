@@ -14,6 +14,7 @@ import com.example.santra.domain.viewmodels.LoginViewModelFactory
 import com.example.santra.domain.viewmodels.RegisterViewModel
 import com.example.santra.domain.viewmodels.RegisterViewModelFactory
 import com.example.santra.ui.screens.AnnouncementDetailScreen
+import com.example.santra.ui.screens.CreateMatch
 import com.example.santra.ui.screens.HomeScreen
 import com.example.santra.ui.screens.LoginScreen
 import com.example.santra.ui.screens.RegisterScreen
@@ -42,5 +43,6 @@ fun AppNavigation(db:AppDatabase) {
             AnnouncementDetailScreen(navController = navController, announcementId = announcementId)
         }
         composable("request") { RequestScreen(navController) }
+        composable("creatematch") { CreateMatch(navController) }
     }
 }
