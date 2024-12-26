@@ -54,9 +54,11 @@ fun TopBarContent() {
         }
         Spacer(
             modifier = Modifier
+                .padding(start = 20.dp, end = 20.dp)
                 .fillMaxWidth()
                 .height(1.dp)
-                .background(Color.Gray)
+                .background(Color.White)
+
         )
     }
 }
