@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -48,6 +49,7 @@ import com.example.santra.R
 import com.example.santra.data.AppDatabase
 import com.example.santra.data.dao.SantraDao
 import com.example.santra.domain.viewmodels.LoginViewModel
+import com.example.santra.ui.components.BackgroundImage
 
 @Composable
 fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
@@ -81,17 +83,24 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
         }
     }
 
-
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color.White)
+            .background(color = Color.Transparent)
     ) {
+
+        BackgroundImage()
+
+        // Logo
         Image(
-            painter = painterResource(R.drawable.santra_background),
+            alignment = Alignment.TopCenter,
+            painter = painterResource(R.drawable.santralogo),
             contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 60.dp),
+            colorFilter = ColorFilter.tint(Color(0x8332C917))
+
         )
 
         Column(
@@ -101,15 +110,6 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Logo
-            Image(
-                painter = painterResource(R.drawable.santralogo),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 20.dp)
-            )
-
             // Başlık
             Box(
                 modifier = Modifier
@@ -223,5 +223,9 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
     }
 }
 
-
-
+//@Preview
+//@Composable
+//fun preLogin(){
+//    val db = AppDatabase.getDatabase(LocalContext.current)
+//    LoginScreen(rememberNavController(), LoginViewModel(db.santraDao()))
+//}
