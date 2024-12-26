@@ -74,7 +74,7 @@ fun BottomBarContent(navController: NavController) {
                     )
                 },
                 selected = false,
-                onClick = { /* Handle click */ }
+                onClick = { navController.navigate("request") }
             )
             BottomNavigationItem(
                 icon = {

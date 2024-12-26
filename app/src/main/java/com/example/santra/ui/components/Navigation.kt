@@ -17,6 +17,7 @@ import com.example.santra.ui.screens.AnnouncementDetailScreen
 import com.example.santra.ui.screens.HomeScreen
 import com.example.santra.ui.screens.LoginScreen
 import com.example.santra.ui.screens.RegisterScreen
+import com.example.santra.ui.screens.RequestScreen
 
 @Composable
 fun AppNavigation(db:AppDatabase) {
@@ -40,5 +41,6 @@ fun AppNavigation(db:AppDatabase) {
             val announcementId = backStackEntry.arguments?.getString("announcementId")
             AnnouncementDetailScreen(navController = navController, announcementId = announcementId)
         }
+        composable("request") { RequestScreen(navController) }
     }
 }
