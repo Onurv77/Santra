@@ -40,6 +40,7 @@ import com.example.santra.data.AppDatabase
 import com.example.santra.data.dao.SantraDao
 import com.example.santra.data.entities.LoginTable
 import com.example.santra.domain.viewmodels.RegisterViewModel
+import com.example.santra.ui.components.BackgroundImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -52,20 +53,18 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
     var StudentMail by remember { mutableStateOf("") }
     var StudentPassword by remember { mutableStateOf("") }
 
+    BackgroundImage()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .fillMaxHeight(),
         contentAlignment = Alignment.TopStart
     ) {
-        Image(
-            painter = painterResource(R.drawable.santra_background),
-            contentDescription = null,
-            modifier = Modifier.fillMaxHeight(),
-            contentScale = ContentScale.FillHeight
-        )
+
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(10.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -174,7 +173,8 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
 
 //@Preview
 //@Composable
-//fun PreviewScreen(){
+//fun asdf() {
 //    val navController = rememberNavController()
-//    RegisterScreen(navController)
+//    val db = AppDatabase.getDatabase(LocalContext.current)
+//    RegisterScreen(navController, RegisterViewModel(db.santraDao()))
 //}

@@ -24,6 +24,7 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.santra.R
+import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
 import com.example.santra.ui.components.DrawerContent
 import com.example.santra.ui.components.LazyRowContent
@@ -35,13 +36,8 @@ import kotlinx.coroutines.launch
 fun HomeScreen(navController: NavController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    Image(
-        painter = painterResource(id = R.drawable.santra_background),
-        contentDescription = "Background",
-        modifier = Modifier.fillMaxSize()
-            .blur(16.dp),
-        contentScale = ContentScale.FillBounds
-    )
+
+    BackgroundImage()
 
     ModalNavigationDrawer(
         drawerState = drawerState,

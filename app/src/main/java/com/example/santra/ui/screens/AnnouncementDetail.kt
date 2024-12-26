@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.santra.R
+import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
 import com.example.santra.ui.components.TopBarContent
 
@@ -36,15 +37,7 @@ import com.example.santra.ui.components.TopBarContent
 fun AnnouncementDetailScreen(navController: NavController, announcementId: String?) {
     val toNumber = announcementId?.toIntOrNull()!!
 
-        Image(
-            painter = painterResource(R.drawable.santra_background),
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxSize()
-                .blur(16.dp),
-            contentScale = ContentScale.FillBounds
-        )
-
+        BackgroundImage()
 
         Scaffold(
             containerColor = Color.Transparent,

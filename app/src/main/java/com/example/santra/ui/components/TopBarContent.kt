@@ -48,7 +48,8 @@ fun TopBarContent() {
                     contentDescription = "Settings",
                     modifier = Modifier
                         .size(60.dp)
-                        .clickable { /* Handle click */ }
+                        .clickable { /* Handle click */ },
+                    tint = Color.White
                 )
             }
         }
