@@ -10,18 +10,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.santra.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
-fun TopBarContent() {
+fun TopBarContent(drawerState: DrawerState, scope: CoroutineScope) {
     Column(
         modifier = Modifier.padding(top = 25.dp)
     ) {
@@ -37,22 +41,25 @@ fun TopBarContent() {
                 Icon(
                     painter = painterResource(id = R.drawable.home_screen_logo),
                     contentDescription = "Logo",
-                    modifier = Modifier.size(125.dp),
-                    tint = Color(0xFF62A245)
+                    modifier = Modifier.size(135.dp),
+                    tint = Color(0xFF7BB928)
                 )
                 Icon(
                     painter = painterResource(id = R.drawable.settings_icon),
                     contentDescription = "Settings",
                     modifier = Modifier
-                        .size(60.dp)
-                        .clickable {  },
-                    tint = Color.White
+                        .size(50.dp)
+                        .padding(end = 10.dp)
+                        .clickable {
+                            scope.launch { drawerState.open() }
+                        },
+                    tint = Color(0xFFFFFFFF)
                 )
             }
         }
         Spacer(
             modifier = Modifier
-                .padding(start = 20.dp, end = 20.dp)
+                .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 10.dp)
                 .fillMaxWidth()
                 .height(1.dp)
                 .background(Color.White)
@@ -63,6 +70,8 @@ fun TopBarContent() {
 
 @Preview
 @Composable
-fun preBar() {
-    TopBarContent()
+fun PreTopBar() {
+    val DrawerState = DrawerState(initialValue = androidx.compose.material3.DrawerValue.Closed)
+    val Scope = CoroutineScope(kotlinx.coroutines.Dispatchers.Default)
+    TopBarContent(drawerState = DrawerState, scope = Scope)
 }

@@ -54,7 +54,7 @@ fun HomeScreen(navController: NavController) {
 
                 Scaffold(
                     containerColor = Color.Transparent,
-                    topBar = { TopBarContent() },
+                    topBar = { TopBarContent(drawerState, scope) },
                     bottomBar = { BottomBarContent(navController) }
                 ) { paddingValues ->
                     Box(
@@ -84,13 +84,11 @@ fun Content(navController: NavController, drawerState: DrawerState, scope: Corou
 
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             LazyRowContent(navController)
-
-            OpenDrawerButton(drawerState, scope)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        NavigationArrows()
+        //NavigationArrows()
     }
 }
 
@@ -99,7 +97,8 @@ fun WarningMessage() {
     Box(
         modifier = Modifier
             .background(Color.Red, shape = RoundedCornerShape(8.dp))
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .width(200.dp),
         contentAlignment = Alignment.Center
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -119,24 +118,7 @@ fun WarningMessage() {
         }
     }
 }
-
-@Composable
-fun OpenDrawerButton(drawerState: DrawerState, scope: CoroutineScope) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomCenter
-    ) {
-        Button(
-            onClick = { scope.launch { drawerState.open() } },
-            modifier = Modifier
-                .padding(16.dp)
-                .size(56.dp)
-        ) {
-            Text("☰")
-        }
-    }
-}
-
+/*
 @Composable
 fun NavigationArrows() {
     Row(
@@ -160,7 +142,7 @@ fun NavigationArrows() {
         )
     }
 }
-
+*/
 @Preview
 @Composable
 fun PreviewScreen() {

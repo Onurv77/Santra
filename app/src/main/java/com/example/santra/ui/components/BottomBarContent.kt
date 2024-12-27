@@ -12,6 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Color
@@ -33,7 +34,7 @@ fun BottomBarContent(navController: NavController) {
             bottomEnd = 0.dp)
     ) {
         BottomNavigation(
-            backgroundColor = Color(0xFF4CAF50),
+            backgroundColor = Color(0xFF56AE33),
             elevation = 8.dp
         ) {
             BottomNavigationItem(
