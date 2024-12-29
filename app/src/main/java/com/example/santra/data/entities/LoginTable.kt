@@ -2,14 +2,13 @@ package com.example.santra.data.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(indices = [Index(value = ["studentId"], unique = true)])
 data class LoginTable(
-    @PrimaryKey(autoGenerate = true ) val StudentID: Int = 0,
-    @ColumnInfo(name = "StudentNumber") val StudentNumber: String,
-    @ColumnInfo(name = "StudentMail") val StudentMail: String,
-    @ColumnInfo(name = "StudentPassword") val StudentPassword: String
+    @PrimaryKey(autoGenerate = true ) val id: Int = 0,
+    @ColumnInfo(name = "studentId") val studentId: String,
+    @ColumnInfo(name = "studentPassword") val studentPassword: String
 
 )
-

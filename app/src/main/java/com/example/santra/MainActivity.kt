@@ -1,7 +1,9 @@
 package com.example.santra
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowInsets
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -20,10 +22,11 @@ class MainActivity : ComponentActivity() {
 
         val santraDao = db.santraDao()
 
+
         CoroutineScope(Dispatchers.IO).launch {
             val allData = santraDao.getAll()
             allData.forEach { data ->
-                Log.d("MainActivity", "StudentID: ${data.StudentID}, StudentNumber: ${data.StudentNumber}, StudentMail: ${data.StudentMail}, StudentPassword: ${data.StudentPassword}")
+                Log.d("MainActivity", "StudentID: ${data.id}, StudentNumber: ${data.studentId}, StudentPassword: ${data.studentPassword}")
             }
         }
 
@@ -31,4 +34,6 @@ class MainActivity : ComponentActivity() {
                 AppNavigation(db)
             }
         }
+
+
     }
