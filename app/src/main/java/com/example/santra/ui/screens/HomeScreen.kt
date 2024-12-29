@@ -9,12 +9,15 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +27,9 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.santra.R
+import com.example.santra.data.AppDatabase
+import com.example.santra.data.entities.PostWithProfile
+import com.example.santra.domain.viewmodels.PostViewModel
 import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
 import com.example.santra.ui.components.DrawerContent
@@ -33,7 +39,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController, viewModel: PostViewModel) {
+    val postsWithProfile by viewModel.postsWithProfile.observeAsState(emptyList())
+
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -62,7 +70,7 @@ fun HomeScreen(navController: NavController) {
                             .fillMaxSize()
                             .padding(paddingValues)
                     ) {
-                        Content(navController, drawerState, scope)
+                        Content(navController, drawerState, scope, postsWithProfile)
                     }
                 }
             }
@@ -71,7 +79,7 @@ fun HomeScreen(navController: NavController) {
 }
 
 @Composable
-fun Content(navController: NavController, drawerState: DrawerState, scope: CoroutineScope) {
+fun Content(navController: NavController, drawerState: DrawerState, scope: CoroutineScope, postsWithProfile: List<PostWithProfile>) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -83,7 +91,7 @@ fun Content(navController: NavController, drawerState: DrawerState, scope: Corou
         WarningMessage()
 
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            LazyRowContent(navController)
+            LazyRowContent(navController, postsWithProfile)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -147,7 +155,9 @@ fun NavigationArrows() {
 @Composable
 fun PreviewScreen() {
     val navController = rememberNavController()
-    HomeScreen(navController)
+    val db = AppDatabase.getDatabase(LocalContext.current)
+    val santraDao = db.santraDao()
+    HomeScreen(navController,PostViewModel(santraDao))
 }
 
 /*

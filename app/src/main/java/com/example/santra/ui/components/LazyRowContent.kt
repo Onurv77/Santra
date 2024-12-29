@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -31,9 +32,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.santra.R
+import com.example.santra.data.entities.PostTable
+import com.example.santra.data.entities.PostWithProfile
 
 @Composable
-fun LazyRowContent(navController: NavController) {
+fun LazyRowContent(navController: NavController, posts: List<PostWithProfile>) {
 
     // LazyRow'daki kart genişliğini ekranın tamamına değil, belirli bir boyuta ayarlayalım
     LazyRow(
@@ -41,14 +44,14 @@ fun LazyRowContent(navController: NavController) {
         contentPadding = PaddingValues(horizontal = 16.dp), // Kartları merkezle// Kartların sağ ve sol kenarlarından boşluk
         horizontalArrangement = Arrangement.Center
     ) {
-        items(5) { index ->
+        items(posts) { post ->
 
             Card(
                 modifier = Modifier
                     .padding(end = 10.dp) // Kartlar arasındaki boşluk
                     .height(475.dp)
                     .width(350.dp) // Kart genişliği tek bir ilan için uygun sınırlandı
-                    .clickable { navController.navigate("announcement_detail/$index") },
+                    .clickable { navController.navigate("announcement_detail/${post.postId}") },
                 elevation = 8.dp,
                 shape = RoundedCornerShape(10.dp),
             ) {
@@ -58,15 +61,14 @@ fun LazyRowContent(navController: NavController) {
                     Image(
                         contentDescription = null,
                         painter = painterResource(R.drawable.account_circle),
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
                             .height(125.dp)
                             .padding(bottom = 16.dp)
                     )
-                    Text(text = "Username", style = MaterialTheme.typography.headlineSmall, modifier = Modifier
+                    Text(text = post.profileUsername?:"Bilinmeyen Kullanıcı", style = MaterialTheme.typography.headlineSmall, modifier = Modifier
                         .align(Alignment.CenterHorizontally))
-                    Text(text = "${index+1}. ilan", style = MaterialTheme.typography.headlineSmall)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = "Bu, ilan açıklaması. Detaylı bilgi için tıklayın.", modifier = Modifier.padding(20.dp))
+                    Text(text = post.postDescription?:"Açıklama Yok", style = MaterialTheme.typography.headlineSmall)
 
                     Spacer(modifier = Modifier.weight(1f)) // Bu Spacer kartın içeriğini yukarı iter
 
@@ -92,11 +94,4 @@ fun LazyRowContent(navController: NavController) {
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun Preview(){
-    val navController = rememberNavController()
-    LazyRowContent(navController)
 }

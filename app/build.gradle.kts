@@ -95,4 +95,6 @@ dependencies {
     ksp("androidx.room:room-compiler:$room_version")
     implementation ("io.reactivex.rxjava3:rxandroid:3.0.2")
 
+    implementation(libs.coil.kt.coil.compose)
+
 }

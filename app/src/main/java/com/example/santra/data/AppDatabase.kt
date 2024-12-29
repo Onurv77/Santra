@@ -6,10 +6,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.santra.data.dao.SantraDao
 import com.example.santra.data.entities.LoginTable
+import com.example.santra.data.entities.PostParticipantsTable
+import com.example.santra.data.entities.PostTable
+import com.example.santra.data.entities.ProfileTable
 
 
-
-@Database(entities = [LoginTable::class], version = 1)
+@Database(entities = [LoginTable::class, ProfileTable::class, PostTable::class, PostParticipantsTable::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun santraDao(): SantraDao
 

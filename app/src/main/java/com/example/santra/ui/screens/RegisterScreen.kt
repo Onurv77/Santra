@@ -1,5 +1,6 @@
 package com.example.santra.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,36 +23,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import androidx.room.Room
 import com.example.santra.R
 import com.example.santra.data.AppDatabase
-import com.example.santra.data.dao.SantraDao
-import com.example.santra.data.entities.LoginTable
 import com.example.santra.domain.viewmodels.RegisterViewModel
 import com.example.santra.ui.components.BackgroundImage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 
 @Composable
 fun RegisterScreen(navController: NavController, registerViewModel: RegisterViewModel) {
 
-    var StudentNumber by remember { mutableStateOf("") }
-    var StudentMail by remember { mutableStateOf("") }
-    var StudentPassword by remember { mutableStateOf("") }
+    val current = LocalContext.current
+
+    var studentId by remember { mutableStateOf("") }
+    var userName by remember { mutableStateOf("") }
+    var mail by remember { mutableStateOf("") }
+    var studentPassword by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
 
     BackgroundImage()
 
@@ -62,6 +59,14 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
         contentAlignment = Alignment.TopStart
     ) {
 
+        Image(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 40.dp, bottom = 40.dp),
+            painter = painterResource(R.drawable.santralogo),
+            contentDescription = null
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -69,13 +74,9 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = painterResource(R.drawable.santralogo),
-                contentDescription = null
-            )
 
             Spacer(modifier = Modifier.height(8.dp))
-            //ID
+
             Text(
                 text = "Öğrenci Numarasını Giriniz:",
                 color = Color.White
@@ -84,8 +85,8 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
             Spacer(modifier = Modifier.height(8.dp))
 
             TextField(
-                value = StudentNumber,
-                onValueChange = {StudentNumber = it},
+                value = studentId,
+                onValueChange = {studentId = it},
                 //label = { Text("Öğrenci Numarası")},
                 shape = RoundedCornerShape(12.dp),
                 colors = TextFieldDefaults.colors(
@@ -95,21 +96,18 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
                 )
             )
 
-
-
-
             Spacer(modifier = Modifier.height(8.dp))
-            //Mail
+
             Text(
-                text = "Öğrenci Mail Adresinizi Giriniz:",
+                text = "Kullanıcı Adınızı Giriniz:",
                 color = Color.White
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             TextField(
-                value = StudentMail,
-                onValueChange = {StudentMail = it},
+                value = userName,
+                onValueChange = {userName = it},
                 shape = RoundedCornerShape(12.dp),
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
@@ -119,7 +117,47 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
             )
 
             Spacer(modifier = Modifier.height(8.dp))
-            //Password
+
+            Text(
+                text = "Öğrenci Mail Adresinizi Giriniz:",
+                color = Color.White
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            TextField(
+                value = mail,
+                onValueChange = {mail = it},
+                shape = RoundedCornerShape(12.dp),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                )
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Telefon Numaranızı Giriniz:",
+                color = Color.White
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            TextField(
+                value = phone,
+                onValueChange = {phone = it},
+                shape = RoundedCornerShape(12.dp),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                )
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
             Text(
                 text = "Şifre Giriniz:",
                 color = Color.White
@@ -128,8 +166,8 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
             Spacer(modifier = Modifier.height(8.dp))
 
             TextField(
-                value = StudentPassword,
-                onValueChange = {StudentPassword = it},
+                value = studentPassword,
+                onValueChange = {studentPassword = it},
                 shape = RoundedCornerShape(12.dp),
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
@@ -141,14 +179,22 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
             Spacer(modifier = Modifier.height(8.dp))
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
+                    .padding(top = 45.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Button(
                     onClick = {
-                        if (StudentMail != "" && StudentNumber != "" && StudentPassword != "") {
-                            registerViewModel.insertUser(studentNumber = StudentNumber, studentMail = StudentMail, studentPassword = StudentPassword)
+                        if (mail != "" && studentId != "" && studentPassword != "" && phone != "" && userName != "") {
+                            registerViewModel.registerUser(studentId = studentId, studentPassword = studentPassword,
+                                mail = mail, phone = phone, userName = userName)
                             navController.navigate("login")
+                        } else {
+                            Toast.makeText(
+                                current,
+                                "Lütfen tüm alanları doldurun",
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     },
                     colors = ButtonDefaults.buttonColors(Color(0xFF31B700)),
@@ -171,10 +217,10 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
     }
 }
 
-//@Preview
-//@Composable
-//fun asdf() {
-//    val navController = rememberNavController()
-//    val db = AppDatabase.getDatabase(LocalContext.current)
-//    RegisterScreen(navController, RegisterViewModel(db.santraDao()))
-//}
+@Preview
+@Composable
+fun asdf() {
+    val navController = rememberNavController()
+    val db = AppDatabase.getDatabase(LocalContext.current)
+    RegisterScreen(navController, RegisterViewModel(db.santraDao()))
+}
