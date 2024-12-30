@@ -33,7 +33,7 @@ import com.example.santra.domain.viewmodels.PostViewModel
 import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
 import com.example.santra.ui.components.DrawerContent
-import com.example.santra.ui.components.LazyRowContent
+import com.example.santra.ui.components.Pager
 import com.example.santra.ui.components.TopBarContent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -90,8 +90,19 @@ fun Content(navController: NavController, drawerState: DrawerState, scope: Corou
 
         WarningMessage()
 
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            LazyRowContent(navController, postsWithProfile)
+        if (postsWithProfile.isEmpty()){
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ){
+                Text(
+                    text = "Henüz bir gönderi yok.",
+                    fontSize = 16.sp,
+                    color = Color.Gray
+                )
+            }
+        } else {
+            Pager(navController, postsWithProfile) // Yeni LazyRowContent fonksiyonu
         }
 
         Spacer(modifier = Modifier.height(16.dp))

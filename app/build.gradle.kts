@@ -97,4 +97,7 @@ dependencies {
 
     implementation(libs.coil.kt.coil.compose)
 
+    implementation ("com.google.accompanist:accompanist-pager:0.30.1")
+
+
 }
