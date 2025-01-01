@@ -19,6 +19,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
@@ -33,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,10 +44,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.santra.R
+import com.example.santra.data.AppDatabase
 import com.example.santra.domain.viewmodels.LoginViewModel
 import com.example.santra.domain.viewmodels.ProfileViewModel
 import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
+import com.example.santra.ui.components.DrawerContent
 import com.example.santra.ui.components.TopBarContent
 
 @Composable
@@ -76,75 +80,92 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
 
     BackgroundImage()
 
-    Scaffold(containerColor = Color.Transparent,
-        topBar = { TopBarContent(drawerState, scope) },
-        bottomBar = { BottomBarContent(navController) }) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            Column(
-                modifier = Modifier.fillMaxSize()
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            DrawerContent(navController)
+        }
+    ) {
+        Scaffold(containerColor = Color.Transparent,
+            topBar = { TopBarContent(drawerState, scope) },
+            bottomBar = { BottomBarContent(navController) }) { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
             ) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = 30.dp, bottom = 30.dp),
-                    shape = RoundedCornerShape(0.dp),
-                    colors = CardDefaults.outlinedCardColors(Color.White)
+                Column(
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
-                    ){
-                        Image(
-                            contentDescription = null,
-                            painter = painterResource(R.drawable.account_circle),
-                            modifier = Modifier
-                                .height(150.dp)
-                                .width(150.dp)
-                                .weight(1f)
-                        )
-                        Image(
-                            painter = painterResource(R.drawable.rank5_3),
-                            contentDescription = null,
-                            modifier = Modifier.align(Alignment.Bottom)
-                                .height(60.dp)
-                                .weight(1f)
-                        )
+                    Card(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = 50.dp, bottom = 50.dp, start = 20.dp, end = 20.dp),
+                        shape = RoundedCornerShape(0.dp),
+                        colors = CardDefaults.outlinedCardColors(Color.White)
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Image(
+                                contentDescription = null,
+                                painter = painterResource(R.drawable.account_circle),
+                                modifier = Modifier
+                                    .height(150.dp)
+                                    .width(150.dp)
+                                    .weight(1f)
+                            )
+                            Image(
+                                painter = painterResource(R.drawable.rank5_3),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .align(Alignment.Bottom)
+                                    .height(60.dp)
+                                    .weight(1f)
+                            )
+                            Text(
+                                text = userName,
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .padding(end = 0.dp)
+                                    .weight(1f),
+                                style = MaterialTheme.typography.headlineMedium,
+                                fontSize = 25.sp
+                            )
+                        }
+
+
+
+                        Spacer(modifier = Modifier.height(50.dp))
+
                         Text(
-                            text = userName,
+                            text = "Mail: $mail",
+                            style = MaterialTheme.typography.headlineSmall,
                             modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                                .padding(end = 0.dp)
-                                .weight(1f),
-                            style = MaterialTheme.typography.headlineMedium,
-                            fontSize = 25.sp
+                                .padding(start = 10.dp)
+                                .fillMaxWidth()
+                        )
+
+                        Spacer(modifier = Modifier.height(50.dp))
+
+                        Text(
+                            text ="Telefon: $phone",
+                            modifier = Modifier
+                                .padding(top = 50.dp, start = 10.dp)
+                                .fillMaxWidth(),
+                            style = MaterialTheme.typography.headlineSmall
                         )
                     }
-
-
-
-                    Spacer(modifier = Modifier.height(50.dp))
-
-                    Text(
-                        text = mail,
-                        style = MaterialTheme.typography.headlineLarge,
-                        modifier = Modifier
-                            .padding(start = 20.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(50.dp))
-
-                    Text(
-                        text = phone,
-                        modifier = Modifier
-                            .padding(top = 50.dp, start = 20.dp),
-                        style = MaterialTheme.typography.headlineLarge
-                    )
                 }
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun pre(){
+    val db = AppDatabase.getDatabase(LocalContext.current)
+    ProfileScreen(rememberNavController(), ProfileViewModel(db.santraDao()), LoginViewModel(db.santraDao()))
 }

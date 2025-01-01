@@ -1,6 +1,8 @@
 package com.example.santra.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -24,6 +26,7 @@ import com.example.santra.data.entities.PostWithProfile
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun Pager(navController: NavController, posts: List<PostWithProfile>) {
+
     // PagerState: Pager'ın durumunu kontrol etmek için
     val pagerState = rememberPagerState()
 
@@ -34,7 +37,9 @@ fun Pager(navController: NavController, posts: List<PostWithProfile>) {
         modifier = Modifier.fillMaxSize()
     ) { page -> // Her sayfa için içerik oluşturuluyor
         val post = posts[page]
-
+        val timeRemaining = post.postDate?.let { it - System.currentTimeMillis() } ?: 0L
+        val isAboutToExpire = timeRemaining in 0..600_000
+        Log.d("PostDate", "Post Date: ${post.postDate}")
         // Tek bir ilanı kart şeklinde gösteriyoruz
         Card(
             modifier = Modifier
@@ -44,6 +49,7 @@ fun Pager(navController: NavController, posts: List<PostWithProfile>) {
             shape = RoundedCornerShape(16.dp),
             elevation = 8.dp
         ) {
+
             Column(
                 modifier = Modifier
                     .padding(16.dp)
@@ -51,6 +57,20 @@ fun Pager(navController: NavController, posts: List<PostWithProfile>) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
+                if (isAboutToExpire) {
+                    Box(
+                        modifier = Modifier
+                            .background(Color.Red, shape = RoundedCornerShape(8.dp))
+                            .padding(8.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "Süresi Doluyor!",
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
                 // Profil Resmi
                 Image(
                     painter = painterResource(R.drawable.account_circle),

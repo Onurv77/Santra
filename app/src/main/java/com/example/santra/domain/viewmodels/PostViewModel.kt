@@ -9,6 +9,7 @@ import com.example.santra.data.dao.SantraDao
 import com.example.santra.data.entities.PostTable
 import com.example.santra.data.entities.PostWithProfile
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PostViewModel(private val santraDao: SantraDao): ViewModel() {
@@ -35,5 +36,26 @@ class PostViewModel(private val santraDao: SantraDao): ViewModel() {
             posts.find { it.postId == postId }
         }
     }
+
+    fun deleteExpiredPosts() {
+        viewModelScope.launch {
+            val currentTime = System.currentTimeMillis()
+            santraDao.deletePostsOlderThan(currentTime)
+        }
+    }
+
+    fun startExpirationCheck() {
+        viewModelScope.launch {
+            while (true) {
+                deleteExpiredPosts()
+                delay(10_000)
+            }
+        }
+    }
+
+    val postWithProfile: LiveData<List<PostWithProfile>> =
+        santraDao.getPostsWithProfile().map { posts ->
+            posts.sortedBy { it.postDate }
+        }
 
 }

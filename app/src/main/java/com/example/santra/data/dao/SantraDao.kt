@@ -39,6 +39,9 @@ interface SantraDao {
     @Query("SELECT * FROM PostTable WHERE studentId = :studentId")
     suspend fun getPostTable(studentId: String): List<PostTable>
 
+    @Query("DELETE FROM PostTable WHERE date < :currentTime")
+    suspend fun deletePostsOlderThan(currentTime: Long)
+
 
     //PostParticipantsTable
     @Insert
