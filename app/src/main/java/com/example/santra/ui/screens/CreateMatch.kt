@@ -21,6 +21,7 @@ import androidx.compose.material.TextButton
 import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -50,6 +51,7 @@ import com.example.santra.domain.viewmodels.PostViewModel
 import com.example.santra.domain.viewmodels.ProfileViewModel
 import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
+import com.example.santra.ui.components.DrawerContent
 import com.example.santra.ui.components.TopBarContent
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -92,92 +94,112 @@ fun CreateMatch(navController: NavController, postViewModel: PostViewModel, logi
 
     BackgroundImage()
 
-    Scaffold(
-        containerColor = Color.Transparent,
-        topBar = { TopBarContent(drawerState, scope) },
-        bottomBar = { BottomBarContent(navController) }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            Column(
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            DrawerContent(navController)
+        }
+    ) {
+        Scaffold(
+            containerColor = Color.Transparent,
+            topBar = { TopBarContent(drawerState, scope) },
+            bottomBar = { BottomBarContent(navController) }
+        ) { paddingValues ->
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
+                    .fillMaxSize()
+                    .padding(paddingValues)
             ) {
-                Text(
-                    text = "İlan Oluştur",
-                    style = MaterialTheme.typography.headlineLarge,
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    color = Color.White
-                )
-
-
-                OutlinedTextField(
-                    value = description,
-                    onValueChange = { description = it },
-                    label = { Text("Açıklama") },
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                )
-
-
-                OutlinedTextField(
-                    value = mevki,
-                    onValueChange = { mevki = it },
-                    label = { Text("Mevki") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                )
-
-
-                TextButton(onClick = { datePickerDialog.show() }) {
-                    Text("Tarih Seç: ${SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(
-                        Date(selectedDate)
-                    )}")
-                }
-
-
-                TextButton(onClick = { timePickerDialog.show() }) {
-                    Text("Saat Seç: ${String.format("%02d:%02d", selectedTime.first, selectedTime.second)}")
-                }
-
-                Button(
-                    onClick = {
-
-                        val calendar = Calendar.getInstance()
-                        calendar.timeInMillis = selectedDate
-                        calendar.set(Calendar.HOUR_OF_DAY, selectedTime.first)
-                        calendar.set(Calendar.MINUTE, selectedTime.second)
-                        val finalDate = calendar.timeInMillis
-
-                        if (description.isNotBlank() && mevki.isNotBlank()) {
-                            postViewModel.createPost(
-                                studentId = studentId,
-                                description = description,
-                                date = finalDate,
-                                mevki = mevki
-                            )
-                            toastMessage = "İlan başarıyla oluşturuldu."
-                            navController.navigate("Home")
-                        } else {
-                            toastMessage = "Tüm alanları doldurun."
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp)
+                        .padding(16.dp)
                 ) {
-                    Text("İlan Oluştur")
-                }
+                    Text(
+                        text = "İlan Oluştur",
+                        style = MaterialTheme.typography.headlineLarge,
+                        modifier = Modifier.padding(bottom = 16.dp),
+                        color = Color.White
+                    )
 
-                if (toastMessage.isNotEmpty()) {
-                    Toast.makeText(LocalContext.current, toastMessage, Toast.LENGTH_SHORT).show()
-                    toastMessage = ""
+
+                    OutlinedTextField(
+                        value = description,
+                        onValueChange = { description = it },
+                        label = { Text("Açıklama") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                    )
+
+
+                    OutlinedTextField(
+                        value = mevki,
+                        onValueChange = { mevki = it },
+                        label = { Text("Mevki") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                    )
+
+
+                    TextButton(onClick = { datePickerDialog.show() }) {
+                        Text(
+                            "Tarih Seç: ${
+                                SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(
+                                    Date(selectedDate)
+                                )
+                            }"
+                        )
+                    }
+
+
+                    TextButton(onClick = { timePickerDialog.show() }) {
+                        Text(
+                            "Saat Seç: ${
+                                String.format(
+                                    "%02d:%02d",
+                                    selectedTime.first,
+                                    selectedTime.second
+                                )
+                            }"
+                        )
+                    }
+
+                    Button(
+                        onClick = {
+
+                            val calendar = Calendar.getInstance()
+                            calendar.timeInMillis = selectedDate
+                            calendar.set(Calendar.HOUR_OF_DAY, selectedTime.first)
+                            calendar.set(Calendar.MINUTE, selectedTime.second)
+                            val finalDate = calendar.timeInMillis
+
+                            if (description.isNotBlank() && mevki.isNotBlank()) {
+                                postViewModel.createPost(
+                                    studentId = studentId,
+                                    description = description,
+                                    date = finalDate,
+                                    mevki = mevki
+                                )
+                                toastMessage = "İlan başarıyla oluşturuldu."
+                                navController.navigate("Home")
+                            } else {
+                                toastMessage = "Tüm alanları doldurun."
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp)
+                    ) {
+                        Text("İlan Oluştur")
+                    }
+
+                    if (toastMessage.isNotEmpty()) {
+                        Toast.makeText(LocalContext.current, toastMessage, Toast.LENGTH_SHORT)
+                            .show()
+                        toastMessage = ""
+                    }
                 }
             }
         }

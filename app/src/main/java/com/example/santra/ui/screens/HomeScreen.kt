@@ -9,6 +9,7 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -41,6 +42,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(navController: NavController, viewModel: PostViewModel) {
     val postsWithProfile by viewModel.postsWithProfile.observeAsState(emptyList())
+    val sortedPosts = postsWithProfile.sortedBy { it.postDate }
+
+    LaunchedEffect(Unit) {
+        viewModel.deleteExpiredPosts()
+        viewModel.startExpirationCheck()
+    }
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -70,7 +77,7 @@ fun HomeScreen(navController: NavController, viewModel: PostViewModel) {
                             .fillMaxSize()
                             .padding(paddingValues)
                     ) {
-                        Content(navController, drawerState, scope, postsWithProfile)
+                        Content(navController, drawerState, scope, sortedPosts)
                     }
                 }
             }
@@ -88,7 +95,7 @@ fun Content(navController: NavController, drawerState: DrawerState, scope: Corou
     ) {
         Spacer(modifier = Modifier.height(16.dp))
 
-        WarningMessage()
+        //WarningMessage()
 
         if (postsWithProfile.isEmpty()){
             Box(

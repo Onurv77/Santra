@@ -62,7 +62,7 @@ fun BottomBarContent(navController: NavController) {
                     )
                 },
                 selected = false,
-                onClick = { /* Handle click */ }
+                onClick = { navController.navigate("profile") }
             )
             BottomNavigationItem(
                 icon = {

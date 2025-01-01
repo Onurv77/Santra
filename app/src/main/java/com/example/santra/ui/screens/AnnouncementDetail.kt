@@ -17,6 +17,7 @@ import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
@@ -41,8 +42,12 @@ import com.example.santra.data.AppDatabase
 import com.example.santra.domain.viewmodels.PostViewModel
 import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
+import com.example.santra.ui.components.DrawerContent
 import com.example.santra.ui.components.TopBarContent
 import kotlinx.coroutines.CoroutineScope
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun AnnouncementDetailScreen(navController: NavController, announcementId: String?, viewModel: PostViewModel) {
@@ -55,92 +60,106 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
         BackgroundImage()
 
     post?.let { postDetails ->
-        Scaffold(
-            containerColor = Color.Transparent,
-            topBar = { TopBarContent(drawerState, scope) },
-            bottomBar = { BottomBarContent(navController) }
-        ) { paddingValues ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+
+        val formattedDate = postDetails.postDate?.let {
+            SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date(it))
+        } ?: "Belirtilmemiş"
+
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                DrawerContent(navController)
+            }
+        ) {
+            Scaffold(
+                containerColor = Color.Transparent,
+                topBar = { TopBarContent(drawerState, scope) },
+                bottomBar = { BottomBarContent(navController) }
+            ) { paddingValues ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
                 ) {
-
-                    Card(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(30.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.outlinedCardColors(Color.White)
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Image(
-                            contentDescription = null,
-                            painter = rememberAsyncImagePainter(postDetails.profileAvatarUrl?: R.drawable.account_circle),
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
-                        )
 
-                        Text(
-                            text = postDetails.profileUsername ?: "Bilinmeyen Kullanıcı",
+                        Card(
                             modifier = Modifier
                                 .align(Alignment.CenterHorizontally)
-                                .padding(bottom = 30.dp)
-                        )
-
-                        Image(
-                            painter = painterResource(R.drawable.rank5_3),
-                            contentDescription = null,
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
-                        )
-
-                        Spacer(modifier = Modifier.height(50.dp))
-
-                        Text(
-                            text = "Tarih: ${postDetails.postDate?: "Belirtilmemiş"}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier
-                                .padding(start = 20.dp)
-                        )
-
-                        Spacer(modifier = Modifier.height(50.dp))
-
-                        Text(
-                            text = postDetails.postDescription?:"Açıklama Yok",
-                            modifier = Modifier
-                                .padding(20.dp)
-                                .padding(bottom = 50.dp),
-                            style = MaterialTheme.typography.bodySmall
-                        )
-
-                        Text(
-                            text = "Mevki: ${postDetails.postMevki?: "Belirtilmemiş"}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier
-                                .padding(start = 20.dp)
-                        )
-
-                        Text(
-                            text = "Telefon: ${postDetails.profilePhone?: "Belirtilmemiş"}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier
-                                .padding(start = 20.dp)
-                        )
-
-                        FilledTonalButton(
-                            onClick = { },
-                            shape = RoundedCornerShape(8.dp),
-                            modifier = Modifier
-                                .width(100.dp)
-                                .align(Alignment.CenterHorizontally),
-                            colors = ButtonDefaults.buttonColors(
-                                Color(0XFF5091B1)
-                            )
+                                .padding(30.dp)
+                                .fillMaxSize(),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.outlinedCardColors(Color.White)
                         ) {
-                            Text("Katıl", style = MaterialTheme.typography.labelLarge)
+                            Image(
+                                contentDescription = null,
+                                painter = rememberAsyncImagePainter(
+                                    postDetails.profileAvatarUrl ?: R.drawable.account_circle
+                                ),
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            )
+
+                            Text(
+                                text = postDetails.profileUsername ?: "Bilinmeyen Kullanıcı",
+                                modifier = Modifier
+                                    .align(Alignment.CenterHorizontally)
+                                    .padding(bottom = 30.dp)
+                            )
+
+                            Image(
+                                painter = painterResource(R.drawable.rank5_3),
+                                contentDescription = null,
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            )
+
+                            Spacer(modifier = Modifier.height(50.dp))
+
+                            Text(
+                                text = "Tarih: ${formattedDate ?: "Belirtilmemiş"}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier
+                                    .padding(20.dp)
+                            )
+
+
+                            Text(
+                                text = "İlan Açıklaması: ${postDetails.postDescription ?: "Açıklama Yok" }",
+                                modifier = Modifier
+                                    .padding(start = 20.dp),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+
+                            Text(
+                                text = "Mevki: ${postDetails.postMevki ?: "Belirtilmemiş"}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier
+                                    .padding(20.dp)
+                            )
+
+                            Text(
+                                text = "Telefon: ${postDetails.profilePhone ?: "Belirtilmemiş"}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier
+                                    .padding(start = 20.dp, bottom = 20.dp)
+                            )
+
+                            FilledTonalButton(
+                                onClick = { },
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .align(Alignment.CenterHorizontally)
+                                    .padding(top = 70.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    Color(0XFF5091B1)
+                                )
+                            ) {
+                                Text("Katıl", style = MaterialTheme.typography.labelLarge)
+                            }
                         }
                     }
                 }
