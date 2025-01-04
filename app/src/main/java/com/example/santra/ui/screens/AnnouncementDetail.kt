@@ -1,5 +1,6 @@
 package com.example.santra.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,9 +23,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -39,6 +44,8 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.santra.R
 import com.example.santra.data.AppDatabase
+import com.example.santra.domain.viewmodels.LoginViewModel
+import com.example.santra.domain.viewmodels.PostParticipantsViewModel
 import com.example.santra.domain.viewmodels.PostViewModel
 import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
@@ -50,9 +57,17 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun AnnouncementDetailScreen(navController: NavController, announcementId: String?, viewModel: PostViewModel) {
+fun AnnouncementDetailScreen(navController: NavController, announcementId: String?, viewModel: PostViewModel, postParticipantsViewModel: PostParticipantsViewModel, loginViewModel: LoginViewModel) {
+
     val postId = announcementId?.toIntOrNull() ?: 0
     val post by viewModel.getPostWithProfileById(postId).observeAsState()
+    val loggedInStudentId by loginViewModel.loggedInStudentId.observeAsState()
+    var isParticipant by remember { mutableStateOf(false) }
+    var ownRoom by remember { mutableStateOf(false) }
+    val loggedInUserName by loginViewModel.loggedInUserName.observeAsState()
+
+
+
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -60,6 +75,26 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
         BackgroundImage()
 
     post?.let { postDetails ->
+
+        LaunchedEffect(loggedInStudentId) {
+
+            loggedInStudentId?.let { id ->
+                if(postDetails.postStudentId == id) {
+                    ownRoom = true
+                }
+            }
+
+        }
+
+        LaunchedEffect(Unit) {
+            isParticipant = postParticipantsViewModel.isUserParticipant(
+                postId = postDetails.postId,
+                studentId = loggedInStudentId!!
+            )
+        }
+
+        val participantUsernames by postParticipantsViewModel.getParticipantUsernames(postId)
+            .observeAsState(emptyList())
 
         val formattedDate = postDetails.postDate?.let {
             SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date(it))
@@ -147,18 +182,57 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
                                     .padding(start = 20.dp, bottom = 20.dp)
                             )
 
-                            FilledTonalButton(
-                                onClick = { },
-                                shape = RoundedCornerShape(8.dp),
-                                modifier = Modifier
-                                    .width(100.dp)
-                                    .align(Alignment.CenterHorizontally)
-                                    .padding(top = 70.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    Color(0XFF5091B1)
-                                )
-                            ) {
-                                Text("Katıl", style = MaterialTheme.typography.labelLarge)
+                            Text(
+                                text = "Katılımcılar: ${participantUsernames.joinToString(", ")}",
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.padding(start = 30.dp, bottom = 35.dp)
+                            )
+
+                            if(!ownRoom) {
+                                FilledTonalButton(
+                                    onClick = {
+                                        if(isParticipant) {
+
+                                            postParticipantsViewModel.removeParticipant(
+                                                postId = postDetails.postId,
+                                                studentId = loggedInStudentId!!,
+                                                onSuccess = {
+                                                    isParticipant = false
+                                                },
+                                                onFailure = {
+                                                    //Hata kısmı
+                                                }
+                                            )
+
+                                        } else {
+                                            postParticipantsViewModel.addParticipant(
+                                                postId = postDetails.postId,
+                                                studentId = loggedInStudentId!!,
+                                                userName = loggedInUserName!!,
+                                                maxParticipants = postDetails.postParticipantNum,
+                                                onSuccess = {
+                                                    isParticipant = true
+                                                },
+                                                onFailure = {
+                                                    //Hata kısmı
+                                                }
+                                            )
+                                        }
+                                    },
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier
+                                        .width(100.dp)
+                                        .align(Alignment.CenterHorizontally)
+                                        .padding(top = 70.dp),
+                                    colors = ButtonDefaults.buttonColors(
+                                        Color(0XFF5091B1)
+                                    )
+                                ) {
+                                    Text(
+                                        if (isParticipant) "Geri Al" else "Katıl",
+                                        style = MaterialTheme.typography.labelLarge
+                                    )
+                                }
                             }
                         }
                     }

@@ -2,6 +2,7 @@ package com.example.santra.data.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.santra.data.entities.LoginTable
@@ -47,16 +48,36 @@ interface SantraDao {
     @Insert
     suspend fun insertPostParticipantsTable(postParticipantsTable: PostParticipantsTable)
 
+    @Query("""
+    SELECT LoginTable.userName 
+    FROM PostParticipantsTable 
+    INNER JOIN LoginTable ON PostParticipantsTable.studentId = LoginTable.studentId 
+    WHERE PostParticipantsTable.postId = :postId
+""")
+    suspend fun getParticipantUsernamesByPostId(postId: Int): List<String>
+
     @Query("SELECT COUNT(*) FROM PostParticipantsTable WHERE postId = :postId")
     suspend fun getParticipantCount(postId: Int): Int
+
+    @Query("SELECT studentId FROM PostParticipantsTable WHERE postId = :postId")
+    suspend fun getstudentIdFromParticipantbyPostId(postId: Int): List<String>
 
     @Query("SELECT * FROM PostParticipantsTable WHERE postId = :postId")
     suspend fun getParticipantsByPostId(postId: Int): List<PostParticipantsTable>
 
+    @Query("SELECT COUNT(*) > 0 FROM PostParticipantsTable WHERE postId = :postId AND studentId = :studentId")
+    suspend fun isParticipantExists(postId: Int, studentId: String): Boolean
+
+    @Query("DELETE FROM PostParticipantsTable WHERE postId = :postId AND studentId = :studentId")
+    suspend fun deleteParticipant(postId: Int, studentId: String)
+
+    //postwithprofile
     @Query(
         """
-        SELECT p.id AS postId, 
-               p.description AS postDescription, 
+        SELECT p.id AS postId,
+               p.studentId As postStudentId,
+               p.description AS postDescription,
+               p.participantNum AS postParticipantNum,
                p.date AS postDate, 
                p.mevki AS postMevki, 
                pr.username AS profileUsername, 

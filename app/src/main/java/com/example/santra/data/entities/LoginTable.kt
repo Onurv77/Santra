@@ -9,6 +9,7 @@ import androidx.room.PrimaryKey
 data class LoginTable(
     @PrimaryKey(autoGenerate = true ) val id: Int = 0,
     @ColumnInfo(name = "studentId") val studentId: String,
+    @ColumnInfo(name = "userName") val userName: String,
     @ColumnInfo(name = "studentPassword") val studentPassword: String
 
 )
