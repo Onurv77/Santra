@@ -24,6 +24,6 @@ import androidx.room.PrimaryKey
 data class PostParticipantsTable(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "postId") val postId: Int,
-    @ColumnInfo(name = "studentId") val studentId: String
-
+    @ColumnInfo(name = "studentId") val studentId: String,
+    @ColumnInfo(name = "userName") val userName: String
 )

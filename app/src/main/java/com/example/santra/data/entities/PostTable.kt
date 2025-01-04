@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 data class PostTable(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "studentId") val studentId: String,
+    @ColumnInfo(name = "participantNum") val participantNum: Int,
     @ColumnInfo(name = "description") val description: String?,
     @ColumnInfo(name = "date") val date: Long,
     @ColumnInfo(name = "mevki") val mevki: String

@@ -11,6 +11,8 @@ import androidx.room.Database
 import com.example.santra.data.AppDatabase
 import com.example.santra.domain.viewmodels.LoginViewModel
 import com.example.santra.domain.viewmodels.LoginViewModelFactory
+import com.example.santra.domain.viewmodels.PostParticipantsViewModel
+import com.example.santra.domain.viewmodels.PostParticipantsViewModelFactory
 import com.example.santra.domain.viewmodels.PostViewModel
 import com.example.santra.domain.viewmodels.PostViewModelFactory
 import com.example.santra.domain.viewmodels.ProfileViewModel
@@ -38,6 +40,8 @@ fun AppNavigation(db:AppDatabase) {
     val profileViewModel: ProfileViewModel = viewModel(factory = profileViewModelFactory)
     val postViewModelFactory = PostViewModelFactory(db.santraDao())
     val postViewModel: PostViewModel = viewModel(factory = postViewModelFactory)
+    val postParticipantsViewModelFactory = PostParticipantsViewModelFactory(db.santraDao())
+    val postParticipantsViewModel: PostParticipantsViewModel = viewModel(factory = postParticipantsViewModelFactory)
 
     NavHost(navController = navController, startDestination = "login") {
         composable("login") { LoginScreen(navController, loginViewModel) }
@@ -48,7 +52,11 @@ fun AppNavigation(db:AppDatabase) {
             arguments = listOf(navArgument("announcementId") { type = NavType.StringType })
         ) { backStackEntry ->
             val announcementId = backStackEntry.arguments?.getString("announcementId")
-            AnnouncementDetailScreen(navController = navController, announcementId = announcementId, postViewModel)
+            AnnouncementDetailScreen(navController = navController,
+                announcementId = announcementId,
+                viewModel = postViewModel,
+                loginViewModel = loginViewModel,
+                postParticipantsViewModel = postParticipantsViewModel)
         }
         composable("request") { RequestScreen(navController) }
         composable("creatematch") { CreateMatch(navController, postViewModel, loginViewModel, profileViewModel) }

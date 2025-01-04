@@ -17,11 +17,15 @@ class LoginViewModel(private val santraDao: SantraDao): ViewModel() {
     private val _loggedInStudentId = MutableLiveData<String?>()
     val loggedInStudentId: LiveData<String?> = _loggedInStudentId
 
+    private val _loggedInUserName = MutableLiveData<String?>()
+    val loggedInUserName: LiveData<String?> = _loggedInUserName
+
     fun login(studentId: String, studentPassword: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val user = santraDao.login(studentId, studentPassword)
             _loginState.postValue(user != null)
             _loggedInStudentId.postValue(user?.studentId)
+            _loggedInUserName.postValue(user?.userName)
         }
     }
 

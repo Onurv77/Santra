@@ -20,7 +20,8 @@ class RegisterViewModel(private val santraDao: SantraDao): ViewModel() {
                      avatar: ByteArray? = null) {
         val loginTable = LoginTable(
             studentId = studentId,
-            studentPassword = studentPassword
+            studentPassword = studentPassword,
+            userName = userName
         )
 
         val profileTable = ProfileTable(

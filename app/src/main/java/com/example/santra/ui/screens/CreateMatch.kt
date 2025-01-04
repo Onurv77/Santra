@@ -61,6 +61,7 @@ import java.util.Locale
 @Composable
 fun CreateMatch(navController: NavController, postViewModel: PostViewModel, loginViewModel: LoginViewModel, profileViewModel: ProfileViewModel) {
 
+    var participantNum by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var mevki by remember { mutableStateOf("") }
     var selectedDate by remember { mutableStateOf<Long>(System.currentTimeMillis()) }
@@ -142,6 +143,15 @@ fun CreateMatch(navController: NavController, postViewModel: PostViewModel, logi
                             .padding(vertical = 8.dp)
                     )
 
+                    OutlinedTextField(
+                        value = participantNum,
+                        onValueChange = { participantNum = it },
+                        label = { Text("Katılım Sayısı") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                    )
+
 
                     TextButton(onClick = { datePickerDialog.show() }) {
                         Text(
@@ -180,7 +190,8 @@ fun CreateMatch(navController: NavController, postViewModel: PostViewModel, logi
                                     studentId = studentId,
                                     description = description,
                                     date = finalDate,
-                                    mevki = mevki
+                                    mevki = mevki,
+                                    participantNum = participantNum.toInt()
                                 )
                                 toastMessage = "İlan başarıyla oluşturuldu."
                                 navController.navigate("Home")
