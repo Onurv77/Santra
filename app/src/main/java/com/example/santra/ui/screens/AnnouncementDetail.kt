@@ -49,7 +49,7 @@ import com.example.santra.domain.viewmodels.PostParticipantsViewModel
 import com.example.santra.domain.viewmodels.PostViewModel
 import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
-import com.example.santra.ui.components.DrawerContent
+import com.example.santra.ui.components.SettingsContent
 import com.example.santra.ui.components.TopBarContent
 import kotlinx.coroutines.CoroutineScope
 import java.text.SimpleDateFormat
@@ -103,7 +103,7 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
         ModalNavigationDrawer(
             drawerState = drawerState,
             drawerContent = {
-                DrawerContent(navController)
+                SettingsContent(navController)
             }
         ) {
             Scaffold(
