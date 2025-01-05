@@ -1,5 +1,6 @@
 package com.example.santra.ui.screens
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -51,15 +52,19 @@ fun HomeScreen(navController: NavController, viewModel: PostViewModel) {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-
+    val drawerWidth = 107.dp // Çekmecenin genişliği
+    val drawerOffset by animateDpAsState(
+        targetValue = if (drawerState.isOpen) 0.dp else drawerWidth
+    )
     BackgroundImage()
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            SettingsContent(navController)
-        }
-    ) {
+//               ModalNavigationDrawer(
+//                drawerState = drawerState,
+//        drawerContent = {
+//            SettingsContent(navController)
+//        }
+//    )
+    Box {
 
         Surface(modifier = Modifier.fillMaxSize(),
             color = Color.Transparent) {
@@ -80,6 +85,23 @@ fun HomeScreen(navController: NavController, viewModel: PostViewModel) {
                         Content(navController, drawerState, scope, sortedPosts)
                     }
                 }
+            }
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(drawerWidth)
+                .align(Alignment.CenterEnd) // Sağ tarafa hizala
+                .offset(x = drawerOffset)
+                .background(Color.Gray) // Çekmece arka plan rengi
+        ) {
+            SettingsContent(navController)
+        }
+        LaunchedEffect(drawerState.currentValue) {
+            if (drawerState.isClosed) {
+                scope.launch { drawerState.close() }
+            } else {
+                scope.launch { drawerState.open() }
             }
         }
     }
