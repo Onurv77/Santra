@@ -33,8 +33,8 @@ import com.example.santra.data.entities.PostWithProfile
 import com.example.santra.domain.viewmodels.PostViewModel
 import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
-import com.example.santra.ui.components.DrawerContent
 import com.example.santra.ui.components.Pager
+import com.example.santra.ui.components.SettingsContent
 import com.example.santra.ui.components.TopBarContent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -57,7 +57,7 @@ fun HomeScreen(navController: NavController, viewModel: PostViewModel) {
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            DrawerContent(navController)
+            SettingsContent(navController)
         }
     ) {
 

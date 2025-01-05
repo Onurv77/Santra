@@ -1,5 +1,6 @@
 package com.example.santra.ui.screens
 
+import android.provider.Settings
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -49,7 +50,7 @@ import com.example.santra.domain.viewmodels.LoginViewModel
 import com.example.santra.domain.viewmodels.ProfileViewModel
 import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
-import com.example.santra.ui.components.DrawerContent
+import com.example.santra.ui.components.SettingsContent
 import com.example.santra.ui.components.TopBarContent
 
 @Composable
@@ -83,7 +84,7 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            DrawerContent(navController)
+            SettingsContent(navController)
         }
     ) {
         Scaffold(containerColor = Color.Transparent,

@@ -30,7 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.santra.R
 import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
-import com.example.santra.ui.components.DrawerContent
+import com.example.santra.ui.components.SettingsContent
 import com.example.santra.ui.components.TopBarContent
 
 @Composable
@@ -43,7 +43,7 @@ fun RequestScreen(navController: NavController) {
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            DrawerContent(navController)
+            SettingsContent(navController)
         }
     ) {
         Scaffold(
