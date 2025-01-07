@@ -132,8 +132,8 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
             OutlinedTextField(
                 value = StudentNumber,
                 onValueChange = { StudentNumber = it },
-                label = { Text("Kullanıcı Adı") },
-                placeholder = { Text("Kullanıcı adınızı girin") },
+                label = { Text("Öğrenci Numarası") },
+                placeholder = { Text("Öğrenci numaranızı giriniz") },
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp), // Oval kenarlar
                 modifier = Modifier
@@ -153,7 +153,7 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
                 value = StudentPassword,
                 onValueChange = { StudentPassword = it },
                 label = { Text("Şifre") },
-                placeholder = { Text("Şifrenizi girin") },
+                placeholder = { Text("Şifrenizi giriniz") },
                 singleLine = true,
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
