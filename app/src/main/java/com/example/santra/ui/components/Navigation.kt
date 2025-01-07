@@ -20,12 +20,14 @@ import com.example.santra.domain.viewmodels.ProfileViewModelFactory
 import com.example.santra.domain.viewmodels.RegisterViewModel
 import com.example.santra.domain.viewmodels.RegisterViewModelFactory
 import com.example.santra.ui.screens.AnnouncementDetailScreen
+import com.example.santra.ui.screens.ChatScreen
 import com.example.santra.ui.screens.CreateMatch
 import com.example.santra.ui.screens.HomeScreen
 import com.example.santra.ui.screens.LoginScreen
 import com.example.santra.ui.screens.ProfileScreen
 import com.example.santra.ui.screens.RegisterScreen
 import com.example.santra.ui.screens.RequestScreen
+import com.example.santra.ui.screens.TextMessage
 
 @Composable
 fun AppNavigation(db:AppDatabase) {
@@ -47,6 +49,7 @@ fun AppNavigation(db:AppDatabase) {
         composable("login") { LoginScreen(navController, loginViewModel) }
         composable("home") { HomeScreen(navController, postViewModel) }
         composable("register") { RegisterScreen(navController, registerViewModel) }
+        composable("chat") { ChatScreen(navController) }
         composable(
             "announcement_detail/{announcementId}",
             arguments = listOf(navArgument("announcementId") { type = NavType.StringType })
@@ -61,5 +64,17 @@ fun AppNavigation(db:AppDatabase) {
         composable("request") { RequestScreen(navController) }
         composable("creatematch") { CreateMatch(navController, postViewModel, loginViewModel, profileViewModel) }
         composable("profile") { ProfileScreen(navController, profileViewModel, loginViewModel) }
+        composable(
+            "message/{chatId}/{userName}",
+            arguments = listOf(
+                navArgument("chatId") { type = NavType.IntType },
+                navArgument("userName") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val chatId = backStackEntry.arguments?.getInt("chatId") ?: -1
+            val userName = backStackEntry.arguments?.getString("userName") ?: "Unknown"
+            TextMessage(navController = navController, chatId = chatId, userName = userName)
+        }
+
     }
 }

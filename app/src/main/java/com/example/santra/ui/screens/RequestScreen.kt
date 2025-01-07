@@ -71,16 +71,6 @@ fun RequestScreen(navController: NavController) {
                             .padding(16.dp)
                             .clickable { navController.navigate("creatematch") }
                     )
-
-                    Image(
-                        contentDescription = null,
-                        painter = painterResource(R.drawable.rakipbul),
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(16.dp)
-                            .clickable { }
-                    )
-
                 }
             }
         }
@@ -90,7 +80,7 @@ fun RequestScreen(navController: NavController) {
 
 @Preview
 @Composable
-fun preReq() {
+fun RequestPreview() {
     val navController = rememberNavController()
     RequestScreen(navController)
 }

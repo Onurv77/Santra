@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -58,16 +59,23 @@ fun Pager(navController: NavController, posts: List<PostWithProfile>) {
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 if (isAboutToExpire) {
-                    Box(
+                    Row (
                         modifier = Modifier
-                            .background(Color.Red, shape = RoundedCornerShape(8.dp))
+                            .background(Color.Red, shape = RoundedCornerShape(25.dp))
                             .padding(8.dp)
-                            .fillMaxWidth()
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
                     ) {
+                        Image(
+                            painter = painterResource(R.drawable.timer_icon),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(20.dp)
+                        )
                         Text(
                             text = "Süresi Doluyor!",
                             color = Color.White,
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                     }
                 }
