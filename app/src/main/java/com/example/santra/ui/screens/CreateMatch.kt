@@ -145,7 +145,11 @@ fun CreateMatch(navController: NavController, postViewModel: PostViewModel, logi
 
                     OutlinedTextField(
                         value = participantNum,
-                        onValueChange = { participantNum = it },
+                        onValueChange = {
+                            if (it.matches(Regex("^\\d*\$"))) {
+                                participantNum = it
+                            }
+                        },
                         label = { Text("Katılım Sayısı") },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -185,16 +189,21 @@ fun CreateMatch(navController: NavController, postViewModel: PostViewModel, logi
                             calendar.set(Calendar.MINUTE, selectedTime.second)
                             val finalDate = calendar.timeInMillis
 
-                            if (description.isNotBlank() && mevki.isNotBlank()) {
-                                postViewModel.createPost(
-                                    studentId = studentId,
-                                    description = description,
-                                    date = finalDate,
-                                    mevki = mevki,
-                                    participantNum = participantNum.toInt()
-                                )
-                                toastMessage = "İlan başarıyla oluşturuldu."
-                                navController.navigate("Home")
+                            if (description.isNotBlank() && mevki.isNotBlank() && participantNum.isNotBlank()) {
+                                try {
+                                    val participantNumInt = participantNum.toInt()
+                                    postViewModel.createPost(
+                                        studentId = studentId,
+                                        description = description,
+                                        date = finalDate,
+                                        mevki = mevki,
+                                        participantNum = participantNumInt
+                                    )
+                                    toastMessage = "İlan başarıyla oluşturuldu."
+                                    navController.navigate("Home")
+                                } catch (e: NumberFormatException) {
+                                    toastMessage = "Katılım sayısı geçerli bir tam sayı olmalıdır."
+                                }
                             } else {
                                 toastMessage = "Tüm alanları doldurun."
                             }

@@ -1,9 +1,12 @@
 package com.example.santra.ui.components
 
+import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Button
@@ -13,16 +16,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.pager.*
 import com.example.santra.R
 import com.example.santra.data.entities.PostWithProfile
+import com.example.santra.ui.screens.byteArrayToUri
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -30,6 +40,8 @@ fun Pager(navController: NavController, posts: List<PostWithProfile>) {
 
     // PagerState: Pager'ın durumunu kontrol etmek için
     val pagerState = rememberPagerState()
+
+    val context = LocalContext.current
 
     // Pager (HorizontalPager)
     HorizontalPager(
@@ -39,8 +51,8 @@ fun Pager(navController: NavController, posts: List<PostWithProfile>) {
     ) { page -> // Her sayfa için içerik oluşturuluyor
         val post = posts[page]
         val timeRemaining = post.postDate?.let { it - System.currentTimeMillis() } ?: 0L
-        val isAboutToExpire = timeRemaining in 0..600_000
-        Log.d("PostDate", "Post Date: ${post.postDate}")
+        val isAboutToExpire = timeRemaining in 0..3_600_000
+        val avatarUri = byteArrayToUri(context, post.profileAvatarUrl)
         // Tek bir ilanı kart şeklinde gösteriyoruz
         Card(
             modifier = Modifier
@@ -81,11 +93,14 @@ fun Pager(navController: NavController, posts: List<PostWithProfile>) {
                 }
                 // Profil Resmi
                 Image(
-                    painter = painterResource(R.drawable.account_circle),
+                    painter = rememberAsyncImagePainter(
+                        avatarUri ?: R.drawable.account_circle
+                    ),
                     contentDescription = "Profile Picture",
                     modifier = Modifier
                         .size(125.dp)
                         .align(Alignment.CenterHorizontally)
+                        .clip(CircleShape)
                 )
                 // Kullanıcı Adı
                 Text(
@@ -177,4 +192,5 @@ fun PreviewLazyRowContent() {
 
     Pager(navController = navController, posts = samplePosts)
 }
+
 

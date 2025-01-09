@@ -1,6 +1,10 @@
 package com.example.santra.ui.screens
 
+import android.content.Context
+import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,7 +13,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -33,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -52,12 +59,17 @@ import com.example.santra.ui.components.BottomBarContent
 import com.example.santra.ui.components.SettingsContent
 import com.example.santra.ui.components.TopBarContent
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 @Composable
 fun AnnouncementDetailScreen(navController: NavController, announcementId: String?, viewModel: PostViewModel, postParticipantsViewModel: PostParticipantsViewModel, loginViewModel: LoginViewModel) {
+
 
     val postId = announcementId?.toIntOrNull() ?: 0
     val post by viewModel.getPostWithProfileById(postId).observeAsState()
@@ -66,13 +78,17 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
     var ownRoom by remember { mutableStateOf(false) }
     val loggedInUserName by loginViewModel.loggedInUserName.observeAsState()
 
-
+    val context = LocalContext.current
 
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-        BackgroundImage()
+    LaunchedEffect(postId) {
+        postParticipantsViewModel.refreshParticipants(postId)
+    }
+
+    BackgroundImage()
 
     post?.let { postDetails ->
 
@@ -93,12 +109,17 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
             )
         }
 
-        val participantUsernames by postParticipantsViewModel.getParticipantUsernames(postId)
-            .observeAsState(emptyList())
+//        val participantUsernames by postParticipantsViewModel.getParticipantUsernames(postId)
+//            .observeAsState(emptyList())
+        val participant by postParticipantsViewModel.participantUsernames.observeAsState(
+            emptyList()
+        )
 
         val formattedDate = postDetails.postDate?.let {
             SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date(it))
         } ?: "Belirtilmemiş"
+
+        val avatarUri = byteArrayToUri(context, postDetails.profileAvatarUrl)
 
         ModalNavigationDrawer(
             drawerState = drawerState,
@@ -130,19 +151,25 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
                             shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.outlinedCardColors(Color.White)
                         ) {
+                            Spacer(modifier = Modifier.height(20.dp))
+
                             Image(
                                 contentDescription = null,
                                 painter = rememberAsyncImagePainter(
-                                    postDetails.profileAvatarUrl ?: R.drawable.account_circle
+                                    avatarUri ?: R.drawable.account_circle
                                 ),
-                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                                modifier = Modifier
+                                    .align(Alignment.CenterHorizontally)
+                                    .size(100.dp)
+                                    .clip(CircleShape)
                             )
 
                             Text(
                                 text = postDetails.profileUsername ?: "Bilinmeyen Kullanıcı",
                                 modifier = Modifier
                                     .align(Alignment.CenterHorizontally)
-                                    .padding(bottom = 30.dp)
+                                    .padding(bottom = 30.dp, top = 5.dp),
+                                style = MaterialTheme.typography.headlineLarge
                             )
 
                             Image(
@@ -182,11 +209,30 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
                                     .padding(start = 20.dp, bottom = 20.dp)
                             )
 
-                            Text(
-                                text = "Katılımcılar: ${participantUsernames.joinToString(", ")}",
-                                style = MaterialTheme.typography.bodyLarge,
+
+
+                            Column(
                                 modifier = Modifier.padding(start = 30.dp, bottom = 35.dp)
-                            )
+                            ) {
+                                Text(
+                                    text = "Katılımcılar:",
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                                participant.forEachIndexed { index, name ->
+                                    Text(
+                                        text = "${index + 1}. $name",
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                }
+                            }
+
+
+
+//                            Text(
+//                                text = "Katılımcılar: ${participant.joinToString(", ")}",
+//                                style = MaterialTheme.typography.bodyLarge,
+//                                modifier = Modifier.padding(start = 30.dp, bottom = 35.dp)
+//                            )
 
                             if(!ownRoom) {
                                 FilledTonalButton(
@@ -198,6 +244,9 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
                                                 studentId = loggedInStudentId!!,
                                                 onSuccess = {
                                                     isParticipant = false
+                                                    scope.launch {
+                                                        postParticipantsViewModel.refreshParticipants(postDetails.postId)
+                                                    }
                                                 },
                                                 onFailure = {
                                                     //Hata kısmı
@@ -212,6 +261,9 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
                                                 maxParticipants = postDetails.postParticipantNum,
                                                 onSuccess = {
                                                     isParticipant = true
+                                                    scope.launch {
+                                                        postParticipantsViewModel.refreshParticipants(postDetails.postId)
+                                                    }
                                                 },
                                                 onFailure = {
                                                     //Hata kısmı
@@ -240,4 +292,22 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
             }
         }
     }
+}
+
+fun byteArrayToUri(context: Context, byteArray: ByteArray?): Uri? {
+    if (byteArray == null) return null
+
+
+    val file = File(context.cacheDir, "avatar_image.jpg")
+    try {
+        FileOutputStream(file).use { fos ->
+            fos.write(byteArray)
+        }
+    } catch (e: IOException) {
+        e.printStackTrace()
+        return null
+    }
+
+
+    return Uri.fromFile(file)
 }

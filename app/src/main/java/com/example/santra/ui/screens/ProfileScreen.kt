@@ -1,5 +1,7 @@
 package com.example.santra.ui.screens
 
+import android.content.Context
+import android.net.Uri
 import android.provider.Settings
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -34,6 +37,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -44,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.santra.R
 import com.example.santra.data.AppDatabase
 import com.example.santra.domain.viewmodels.LoginViewModel
@@ -52,6 +57,9 @@ import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
 import com.example.santra.ui.components.SettingsContent
 import com.example.santra.ui.components.TopBarContent
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 @Composable
 fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewModel, loginViewModel: LoginViewModel) {
@@ -61,6 +69,10 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
     var userName by remember { mutableStateOf("") }
     var mail by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
+    var avatar by remember { mutableStateOf<ByteArray?>(null) }
+
+    val context = LocalContext.current
+
 
     val loggedInStudentId by loginViewModel.loggedInStudentId.observeAsState()
     val profile by profileViewModel.profile.observeAsState()
@@ -70,6 +82,7 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
             userName = it.userName ?: "Kullanıcı adı yok"
             mail = it.mail ?: "E-posta yok"
             phone = it.phone ?: "Telefon numarası yok"
+            avatar = it.avatar
         }
     }
 
@@ -97,26 +110,23 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
             ) {
                 Column(
                     modifier = Modifier.fillMaxSize()
+
                 ) {
                     Card(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(top = 50.dp, bottom = 50.dp, start = 20.dp, end = 20.dp),
-                        shape = RoundedCornerShape(0.dp),
+                            .padding(top = 20.dp, bottom = 20.dp, start = 20.dp, end = 20.dp),
+                        shape = RoundedCornerShape(5.dp),
                         colors = CardDefaults.outlinedCardColors(Color.White)
                     ) {
                         Row(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier.fillMaxWidth()
+                                .padding(30.dp)
                         ) {
-                            Image(
-                                contentDescription = null,
-                                painter = painterResource(R.drawable.account_circle),
-                                modifier = Modifier
-                                    .height(150.dp)
-                                    .width(150.dp)
-                                    .weight(1f)
-                            )
+
+                            ProfileAvatar(avatar = avatar, context = context)
+
                             Image(
                                 painter = painterResource(R.drawable.rank5_3),
                                 contentDescription = null,
@@ -163,6 +173,22 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
         }
     }
 }
+
+@Composable
+fun ProfileAvatar(avatar: ByteArray?, context: Context) {
+    val avatarUri = avatar?.let { byteArrayToUri(context, it) }
+    Image(
+        contentDescription = null,
+        painter = rememberAsyncImagePainter(
+            avatarUri ?: R.drawable.account_circle
+        ),
+        modifier = Modifier
+            .height(150.dp)
+            .width(150.dp)
+            .clip(CircleShape)
+    )
+}
+
 
 @Preview
 @Composable
