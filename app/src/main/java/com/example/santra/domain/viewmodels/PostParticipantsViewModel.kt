@@ -65,4 +65,15 @@ class PostParticipantsViewModel(private val santraDao: SantraDao): ViewModel() {
         }
         return usernamesLiveData
     }
+
+    private val _participantUsernames = MutableLiveData<List<String>>()
+    val participantUsernames: LiveData<List<String>> get() = _participantUsernames
+
+    fun refreshParticipants(postId: Int) {
+        viewModelScope.launch {
+            val updatedList = santraDao.getParticipantUsernamesByPostId(postId)
+            _participantUsernames.value = updatedList
+        }
+    }
+
 }

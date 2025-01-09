@@ -7,6 +7,6 @@ data class PostWithProfile(val postId: Int,
                            val postDate: Long?,
                            val postMevki: String?,
                            val profileUsername: String?,
-                           val profileAvatarUrl: String?,
+                           val profileAvatarUrl: ByteArray?,
                            val profileRank: String?,
                            val profilePhone: String?)
