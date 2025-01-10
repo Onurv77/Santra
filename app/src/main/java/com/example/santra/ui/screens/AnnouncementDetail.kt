@@ -56,7 +56,6 @@ import com.example.santra.domain.viewmodels.PostParticipantsViewModel
 import com.example.santra.domain.viewmodels.PostViewModel
 import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
-import com.example.santra.ui.components.SettingsContent
 import com.example.santra.ui.components.TopBarContent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -126,15 +125,10 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
 
         val avatarUri = byteArrayToUri(context, postDetails.profileAvatarUrl)
 
-        ModalNavigationDrawer(
-            drawerState = drawerState,
-            drawerContent = {
-                SettingsContent(navController)
-            }
-        ) {
+
             Scaffold(
                 containerColor = Color.Transparent,
-                topBar = { TopBarContent(drawerState, scope) },
+                topBar = { TopBarContent(navController) },
                 bottomBar = { BottomBarContent(navController) }
             ) { paddingValues ->
                 Box(
@@ -369,7 +363,7 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
                     }
                 }
             }
-        }
+
     }
 }
 

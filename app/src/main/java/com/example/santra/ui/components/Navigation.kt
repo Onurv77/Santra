@@ -27,6 +27,7 @@ import com.example.santra.ui.screens.LoginScreen
 import com.example.santra.ui.screens.ProfileScreen
 import com.example.santra.ui.screens.RegisterScreen
 import com.example.santra.ui.screens.RequestScreen
+import com.example.santra.ui.screens.SettingsScreen
 import com.example.santra.ui.screens.TextMessage
 
 @Composable
@@ -64,6 +65,7 @@ fun AppNavigation(db:AppDatabase) {
         composable("request") { RequestScreen(navController) }
         composable("creatematch") { CreateMatch(navController, postViewModel, loginViewModel, profileViewModel) }
         composable("profile") { ProfileScreen(navController, profileViewModel, loginViewModel) }
+        composable("settings") { SettingsScreen(navController) }
         composable(
             "message/{chatId}/{userName}",
             arguments = listOf(

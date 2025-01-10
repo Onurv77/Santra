@@ -30,7 +30,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.santra.R
 import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
-import com.example.santra.ui.components.SettingsContent
 import com.example.santra.ui.components.TopBarContent
 
 @Composable
@@ -40,15 +39,10 @@ fun RequestScreen(navController: NavController) {
     
     BackgroundImage()
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            SettingsContent(navController)
-        }
-    ) {
+
         Scaffold(
             containerColor = Color.Transparent,
-            topBar = { TopBarContent(drawerState, scope) },
+            topBar = { TopBarContent(navController) },
             bottomBar = { BottomBarContent(navController) }
         ) { paddingValues ->
 
@@ -74,7 +68,6 @@ fun RequestScreen(navController: NavController) {
                 }
             }
         }
-    }
 
 }
 

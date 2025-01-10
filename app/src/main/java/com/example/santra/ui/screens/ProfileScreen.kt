@@ -55,7 +55,6 @@ import com.example.santra.domain.viewmodels.LoginViewModel
 import com.example.santra.domain.viewmodels.ProfileViewModel
 import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
-import com.example.santra.ui.components.SettingsContent
 import com.example.santra.ui.components.TopBarContent
 import java.io.File
 import java.io.FileOutputStream
@@ -64,8 +63,6 @@ import java.io.IOException
 @Composable
 fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewModel, loginViewModel: LoginViewModel) {
 
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
     var userName by remember { mutableStateOf("") }
     var mail by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
@@ -94,14 +91,9 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
 
     BackgroundImage()
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            SettingsContent(navController)
-        }
-    ) {
+
         Scaffold(containerColor = Color.Transparent,
-            topBar = { TopBarContent(drawerState, scope) },
+            topBar = { TopBarContent(navController) },
             bottomBar = { BottomBarContent(navController) }) { paddingValues ->
             Box(
                 modifier = Modifier
@@ -171,7 +163,7 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
                 }
             }
         }
-    }
+
 }
 
 @Composable
