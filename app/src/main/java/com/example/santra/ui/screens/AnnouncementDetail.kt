@@ -77,6 +77,7 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
     var isParticipant by remember { mutableStateOf(false) }
     var ownRoom by remember { mutableStateOf(false) }
     val loggedInUserName by loginViewModel.loggedInUserName.observeAsState()
+    var isFull by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
 
@@ -107,7 +108,11 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
                 postId = postDetails.postId,
                 studentId = loggedInStudentId!!
             )
+            isFull = postParticipantsViewModel.isFull(postDetails.postId, postDetails.postParticipantNum)
         }
+
+
+
 
 //        val participantUsernames by postParticipantsViewModel.getParticipantUsernames(postId)
 //            .observeAsState(emptyList())
@@ -234,56 +239,130 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
 //                                modifier = Modifier.padding(start = 30.dp, bottom = 35.dp)
 //                            )
 
-                            if(!ownRoom) {
-                                FilledTonalButton(
-                                    onClick = {
-                                        if(isParticipant) {
+                            if (!ownRoom) {
+                                if (!isFull) {
+                                    FilledTonalButton(
+                                        onClick = {
+                                            if (isParticipant) {
 
-                                            postParticipantsViewModel.removeParticipant(
-                                                postId = postDetails.postId,
-                                                studentId = loggedInStudentId!!,
-                                                onSuccess = {
-                                                    isParticipant = false
-                                                    scope.launch {
-                                                        postParticipantsViewModel.refreshParticipants(postDetails.postId)
+                                                postParticipantsViewModel.removeParticipant(
+                                                    postId = postDetails.postId,
+                                                    studentId = loggedInStudentId!!,
+                                                    onSuccess = {
+                                                        isParticipant = false
+                                                        scope.launch {
+                                                            postParticipantsViewModel.refreshParticipants(
+                                                                postDetails.postId
+                                                            )
+                                                            isFull =
+                                                                postParticipantsViewModel.isFull(
+                                                                    postDetails.postId,
+                                                                    postDetails.postParticipantNum
+                                                                )
+                                                        }
+                                                    },
+                                                    onFailure = {
+                                                        //Hata kısmı
                                                     }
-                                                },
-                                                onFailure = {
-                                                    //Hata kısmı
-                                                }
+                                                )
+
+                                            } else {
+                                                postParticipantsViewModel.addParticipant(
+                                                    postId = postDetails.postId,
+                                                    studentId = loggedInStudentId!!,
+                                                    userName = loggedInUserName!!,
+                                                    maxParticipants = postDetails.postParticipantNum,
+                                                    onSuccess = {
+                                                        isParticipant = true
+                                                        scope.launch {
+                                                            postParticipantsViewModel.refreshParticipants(
+                                                                postDetails.postId
+                                                            )
+                                                            isFull =
+                                                                postParticipantsViewModel.isFull(
+                                                                    postDetails.postId,
+                                                                    postDetails.postParticipantNum
+                                                                )
+                                                        }
+                                                    },
+                                                    onFailure = {
+                                                        //Hata kısmı
+                                                    }
+                                                )
+                                            }
+                                        },
+                                        shape = RoundedCornerShape(8.dp),
+                                        modifier = Modifier
+                                            .width(100.dp)
+                                            .align(Alignment.CenterHorizontally)
+                                            .padding(top = 70.dp),
+                                        colors = ButtonDefaults.buttonColors(
+                                            Color(0XFF5091B1)
+                                        )
+                                    ) {
+                                        Text(
+                                            if (isParticipant) "Geri Al" else "Katıl",
+                                            style = MaterialTheme.typography.labelLarge
+                                        )
+                                    }
+                                } else {
+                                    if (isParticipant) {
+                                        FilledTonalButton(
+                                            onClick = {
+                                                postParticipantsViewModel.removeParticipant(
+                                                    postId = postDetails.postId,
+                                                    studentId = loggedInStudentId!!,
+                                                    onSuccess = {
+                                                        isParticipant = false
+                                                        scope.launch {
+                                                            postParticipantsViewModel.refreshParticipants(
+                                                                postDetails.postId
+                                                            )
+                                                            isFull =
+                                                                postParticipantsViewModel.isFull(
+                                                                    postDetails.postId,
+                                                                    postDetails.postParticipantNum
+                                                                )
+                                                        }
+                                                    },
+                                                    onFailure = {
+                                                        // Hata kısmı
+                                                    }
+                                                )
+                                            },
+                                            shape = RoundedCornerShape(8.dp),
+                                            modifier = Modifier
+                                                .width(100.dp)
+                                                .align(Alignment.CenterHorizontally)
+                                                .padding(top = 70.dp),
+                                            colors = ButtonDefaults.buttonColors(
+                                                Color(0XFF5091B1)
                                             )
-
-                                        } else {
-                                            postParticipantsViewModel.addParticipant(
-                                                postId = postDetails.postId,
-                                                studentId = loggedInStudentId!!,
-                                                userName = loggedInUserName!!,
-                                                maxParticipants = postDetails.postParticipantNum,
-                                                onSuccess = {
-                                                    isParticipant = true
-                                                    scope.launch {
-                                                        postParticipantsViewModel.refreshParticipants(postDetails.postId)
-                                                    }
-                                                },
-                                                onFailure = {
-                                                    //Hata kısmı
-                                                }
+                                        ) {
+                                            Text(
+                                                text = "Geri Al",
+                                                style = MaterialTheme.typography.labelLarge
                                             )
                                         }
-                                    },
-                                    shape = RoundedCornerShape(8.dp),
-                                    modifier = Modifier
-                                        .width(100.dp)
-                                        .align(Alignment.CenterHorizontally)
-                                        .padding(top = 70.dp),
-                                    colors = ButtonDefaults.buttonColors(
-                                        Color(0XFF5091B1)
-                                    )
-                                ) {
-                                    Text(
-                                        if (isParticipant) "Geri Al" else "Katıl",
-                                        style = MaterialTheme.typography.labelLarge
-                                    )
+                                    } else {
+
+                                        FilledTonalButton(
+                                            onClick = {},
+                                            shape = RoundedCornerShape(8.dp),
+                                            modifier = Modifier
+                                                .width(100.dp)
+                                                .align(Alignment.CenterHorizontally)
+                                                .padding(top = 70.dp),
+                                            colors = ButtonDefaults.buttonColors(
+                                                Color(0XFF5091B1)
+                                            )
+                                        ) {
+                                            Text(
+                                                text = "Dolu",
+                                                style = MaterialTheme.typography.labelLarge
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
