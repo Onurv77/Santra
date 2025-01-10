@@ -20,12 +20,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.santra.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun TopBarContent(drawerState: DrawerState, scope: CoroutineScope) {
+fun TopBarContent(navController: NavController) {
     Column(
         modifier = Modifier.padding(top = 25.dp)
     ) {
@@ -51,7 +53,7 @@ fun TopBarContent(drawerState: DrawerState, scope: CoroutineScope) {
                         .size(50.dp)
                         .padding(end = 10.dp)
                         .clickable {
-                            scope.launch { drawerState.open() }
+                            navController.navigate("settings")
                         },
                     tint = Color(0xFFFFFFFF)
                 )
@@ -71,7 +73,6 @@ fun TopBarContent(drawerState: DrawerState, scope: CoroutineScope) {
 @Preview
 @Composable
 fun PreTopBar() {
-    val DrawerState = DrawerState(initialValue = androidx.compose.material3.DrawerValue.Closed)
-    val Scope = CoroutineScope(kotlinx.coroutines.Dispatchers.Default)
-    TopBarContent(drawerState = DrawerState, scope = Scope)
+    val navController = rememberNavController()
+    TopBarContent(navController)
 }

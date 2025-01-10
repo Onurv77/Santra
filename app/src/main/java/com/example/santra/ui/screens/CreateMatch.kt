@@ -51,7 +51,6 @@ import com.example.santra.domain.viewmodels.PostViewModel
 import com.example.santra.domain.viewmodels.ProfileViewModel
 import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
-import com.example.santra.ui.components.SettingsContent
 import com.example.santra.ui.components.TopBarContent
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -95,15 +94,10 @@ fun CreateMatch(navController: NavController, postViewModel: PostViewModel, logi
 
     BackgroundImage()
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            SettingsContent(navController)
-        }
-    ) {
+
         Scaffold(
             containerColor = Color.Transparent,
-            topBar = { TopBarContent(drawerState, scope) },
+            topBar = { TopBarContent(navController) },
             bottomBar = { BottomBarContent(navController) }
         ) { paddingValues ->
             Box(
@@ -223,7 +217,6 @@ fun CreateMatch(navController: NavController, postViewModel: PostViewModel, logi
                 }
             }
         }
-    }
 }
 
 @Preview

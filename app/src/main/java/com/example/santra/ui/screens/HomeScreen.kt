@@ -35,7 +35,6 @@ import com.example.santra.domain.viewmodels.PostViewModel
 import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
 import com.example.santra.ui.components.Pager
-import com.example.santra.ui.components.SettingsContent
 import com.example.santra.ui.components.TopBarContent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -58,12 +57,6 @@ fun HomeScreen(navController: NavController, viewModel: PostViewModel) {
     )
     BackgroundImage()
 
-//               ModalNavigationDrawer(
-//                drawerState = drawerState,
-//        drawerContent = {
-//            SettingsContent(navController)
-//        }
-//    )
     Box {
 
         Surface(modifier = Modifier.fillMaxSize(),
@@ -74,7 +67,7 @@ fun HomeScreen(navController: NavController, viewModel: PostViewModel) {
 
                 Scaffold(
                     containerColor = Color.Transparent,
-                    topBar = { TopBarContent(drawerState, scope) },
+                    topBar = { TopBarContent(navController) },
                     bottomBar = { BottomBarContent(navController) }
                 ) { paddingValues ->
                     Box(
@@ -87,16 +80,7 @@ fun HomeScreen(navController: NavController, viewModel: PostViewModel) {
                 }
             }
         }
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(drawerWidth)
-                .align(Alignment.CenterEnd) // Sağ tarafa hizala
-                .offset(x = drawerOffset)
-                .background(Color.Gray) // Çekmece arka plan rengi
-        ) {
-            SettingsContent(navController)
-        }
+
         LaunchedEffect(drawerState.currentValue) {
             if (drawerState.isClosed) {
                 scope.launch { drawerState.close() }
