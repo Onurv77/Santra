@@ -172,21 +172,30 @@ fun ExitApp() {
     val context = LocalContext.current
 
     if (showDialog) {
-        AlertDialog(
+        androidx.compose.material.AlertDialog(
             onDismissRequest = { showDialog = false },
             title = { Text(text = "Çıkış Yap") },
-            text = { Text(text = "Uygulamadan çıkmak istediğinize emin misiniz?") },
-            confirmButton = {
-                TextButton(onClick = {
-                    showDialog = false
-                    (context as? Activity)?.finishAffinity()
-                }) {
-                    Text("Evet")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDialog = false }) {
-                    Text("Hayır")
+            shape = MaterialTheme.shapes.medium,
+            text = { Text(text = "Uygulamadan çıkış yapmak istediğinize emin misiniz?") },
+            buttons = {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.End // Düğmeleri sağa hizala
+                ) {
+                    TextButton(
+                        onClick = {
+                            showDialog = false
+                            (context as? Activity)?.finishAffinity()
+                        },
+                        modifier = Modifier.padding(end = 8.dp) // "Evet" butonu
+                    ) {
+                        Text(text = "Evet", color = Color(0xFFB71C1C))
+                    }
+                    TextButton(onClick = { showDialog = false }) { // "Hayır" butonu
+                        Text(text = "Hayır", color = Color.Gray)
+                    }
                 }
             }
         )
@@ -195,8 +204,8 @@ fun ExitApp() {
     Button(
         onClick = { showDialog = true },
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFFB71C1C),  // Koyu kırmızı ton
-            contentColor = Color.White  // Yazı beyaz
+            containerColor = Color(0xFFB71C1C),
+            contentColor = Color.White
         ),
         modifier = Modifier
             .width(150.dp)
@@ -206,6 +215,7 @@ fun ExitApp() {
         Text(text = "Çıkış yap", color = Color.White, fontSize = 20.sp)
     }
 }
+
 
 @Preview
 @Composable
