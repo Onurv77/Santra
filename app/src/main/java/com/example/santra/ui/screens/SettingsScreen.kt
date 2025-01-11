@@ -69,9 +69,9 @@ fun SettingsScreen(navController: NavController) {
                         .shadow(4.dp, shape = RoundedCornerShape(50.dp), ambientColor = Color.Gray, spotColor = Color.DarkGray)
                         .blur(0.75.dp),
                     colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color(0xFFFFFFFF),
-                        focusedContainerColor = Color(0xFF00FF00),
-                        unfocusedTextColor = Color(0xFFFFFFFF)
+                        unfocusedContainerColor = Color(0xFFD9D9D9),
+                        focusedContainerColor = Color(0xFFFFFFFF),
+                        unfocusedTextColor = Color(0xFF000000)
                     ),
                 )
                 ActionButton("Onayla")
@@ -103,9 +103,9 @@ fun SettingsScreen(navController: NavController) {
                         .shadow(4.dp, shape = RoundedCornerShape(50.dp), ambientColor = Color.Gray, spotColor = Color.DarkGray)
                         .blur(0.75.dp),
                     colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color(0xFFFFFFFF),
-                        focusedContainerColor = Color(0xFF00FF00),
-                        unfocusedTextColor = Color(0xFFFFFFFF)
+                        unfocusedContainerColor = Color(0xFFD9D9D9),
+                        focusedContainerColor = Color(0xFFFFFFFF),
+                        unfocusedTextColor = Color(0xFF000000)
                     )
                 )
                 OutlinedTextField(
@@ -119,9 +119,9 @@ fun SettingsScreen(navController: NavController) {
                         .shadow(4.dp, shape = RoundedCornerShape(50.dp), ambientColor = Color.Gray, spotColor = Color.DarkGray)
                         .blur(0.75.dp),
                     colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color(0xFFFFFFFF),
-                        focusedContainerColor = Color(0xFF00FF00),
-                        unfocusedTextColor = Color(0xFFFFFFFF)
+                        unfocusedContainerColor = Color(0xFFD9D9D9),
+                        focusedContainerColor = Color(0xFFFFFFFF),
+                        unfocusedTextColor = Color(0xFF000000)
                     )
                 )
                 OutlinedTextField(
@@ -135,9 +135,9 @@ fun SettingsScreen(navController: NavController) {
                         .shadow(4.dp, shape = RoundedCornerShape(50.dp), ambientColor = Color.Gray, spotColor = Color.DarkGray)
                         .blur(0.75.dp),
                     colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color(0xFFFFFFFF),
-                        focusedContainerColor = Color(0xFF00FF00),
-                        unfocusedTextColor = Color(0xFFFFFFFF)
+                        unfocusedContainerColor = Color(0xFFD9D9D9),
+                        focusedContainerColor = Color(0xFFFFFFFF),
+                        unfocusedTextColor = Color(0xFF000000)
                     )
                 )
                 ActionButton("Değiştir")
