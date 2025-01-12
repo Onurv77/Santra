@@ -84,6 +84,7 @@ interface SantraDao {
         """
         SELECT p.id AS postId,
                p.studentId As postStudentId,
+               p.groupName AS postGroupName,
                p.description AS postDescription,
                p.participantNum AS postParticipantNum,
                p.date AS postDate, 
@@ -101,11 +102,14 @@ interface SantraDao {
     suspend fun deleteAll()
 
     //chat
+    @Query("SELECT postId FROM GroupChatsTable WHERE id=:chatId LIMIT 1")
+    suspend fun getPostIdFromGroupChatsTableByChatId(chatId:Int): Int
+
     @Insert
     suspend fun insertGroupChatsTable(groupChatsTable: GroupChatsTable)
 
-    @Query("DELETE FROM GroupChatsTable WHERE postId = :postId")
-    suspend fun removeGroupChatsTablebyPostId(postId: Int)
+    @Query("DELETE FROM GroupChatsTable WHERE studentId = :studentId")
+    suspend fun removeGroupChatsTablebyPostId(studentId: String)
 
     @Query("SELECT * FROM GroupChatsTable WHERE studentId = :studentId")
     suspend fun getChatTablebyPostId(studentId: String): List<GroupChatsTable>
@@ -116,6 +120,9 @@ interface SantraDao {
     @Query("SELECT * FROM GroupChatsTable")
     suspend fun getGroupChatsTable(): List<GroupChatsTable>
 
+    @Query("UPDATE GroupChatsTable SET lastMessageTime=:lastMessageTime, lastMessage=:lastMessage WHERE groupName=:groupName")
+    suspend fun updateGroupTableTimeAndMessageByGroupName(lastMessage: String, lastMessageTime: Long, groupName: String)
+
     //chatmessage
     @Insert
     suspend fun insertMessagesTable(messagesTable: MessagesTable)
@@ -125,6 +132,5 @@ interface SantraDao {
 
     @Query("SELECT * FROM MessagesTable")
     suspend fun getMessagesTable(): List<MessagesTable>
-
 }
 

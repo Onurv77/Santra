@@ -49,6 +49,8 @@ import com.example.santra.R
 import com.example.santra.data.entities.GroupChatsTable
 import com.example.santra.domain.viewmodels.ChatViewModel
 import com.example.santra.domain.viewmodels.LoginViewModel
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun ChatScreen(navController: NavController,
@@ -184,9 +186,14 @@ fun ChatListItem(chat: GroupChatsTable, onClick: () -> Unit) {
 
         // Mesaj Zamanı
         Text(
-            text = chat.lastMessageTime.toString(),
+            text = if (chat.lastMessageTime != null) formatTime(chat.lastMessageTime) else " ",
             fontSize = 12.sp,
             color = Color.Gray,
         )
     }
+}
+
+fun formatTime(timeInMillis: Long): String {
+    val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return dateFormat.format(timeInMillis)
 }

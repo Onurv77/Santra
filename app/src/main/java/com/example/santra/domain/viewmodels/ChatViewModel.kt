@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.santra.data.dao.SantraDao
 import com.example.santra.data.entities.GroupChatsTable
 import com.example.santra.data.entities.MessagesTable
@@ -24,10 +25,20 @@ class ChatViewModel(private val santraDao: SantraDao) : ViewModel() {
         }
     }
 
-    fun removeGroupChatsTable(postId: Int) {
+    fun removeGroupChatsTable(studentId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            santraDao.removeGroupChatsTablebyPostId(postId)
+            santraDao.removeGroupChatsTablebyPostId(studentId)
         }
+    }
+
+    fun updateLastTimeAndMessageFromGroupTableByPostId(lastMessage: String, lastMessageTime: Long, groupName: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            santraDao.updateGroupTableTimeAndMessageByGroupName(lastMessage, lastMessageTime, groupName)
+        }
+    }
+
+    suspend fun getPostIdFromGroupChatsTableByChatId(chatId: Int): Int {
+        return santraDao.getPostIdFromGroupChatsTableByChatId(chatId)
     }
 
     private val _getOtherGroupChat = MutableLiveData<List<GroupChatsTable>>()

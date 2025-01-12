@@ -184,7 +184,7 @@ fun AnnouncementDetailScreen(navController: NavController,
                                 modifier = Modifier.align(Alignment.CenterHorizontally)
                             )
 
-                            Spacer(modifier = Modifier.height(50.dp))
+                            Spacer(modifier = Modifier.height(10.dp))
 
                             Text(
                                 text = "Tarih: ${formattedDate ?: "Belirtilmemiş"}",
@@ -260,7 +260,7 @@ fun AnnouncementDetailScreen(navController: NavController,
                                                                     postDetails.postId,
                                                                     postDetails.postParticipantNum
                                                                 )
-                                                            chatViewModel.removeGroupChatsTable(postDetails.postId)
+                                                            chatViewModel.removeGroupChatsTable(loggedInStudentId!!)
                                                         }
                                                     },
                                                     onFailure = {
@@ -290,7 +290,7 @@ fun AnnouncementDetailScreen(navController: NavController,
                                                                 GroupChatsTable(
                                                                     postId = postDetails.postId,
                                                                     studentId = loggedInStudentId!!,
-                                                                    groupName = postDetails.profileUsername?.toUpperCase(),
+                                                                    groupName = postDetails.postGroupName,
                                                                     lastMessage = null,
                                                                     lastMessageTime = null
                                                                 )
@@ -336,7 +336,7 @@ fun AnnouncementDetailScreen(navController: NavController,
                                                                     postDetails.postId,
                                                                     postDetails.postParticipantNum
                                                                 )
-                                                            chatViewModel.removeGroupChatsTable(postDetails.postId)
+                                                            chatViewModel.removeGroupChatsTable(loggedInStudentId!!)
                                                         }
                                                     },
                                                     onFailure = {
