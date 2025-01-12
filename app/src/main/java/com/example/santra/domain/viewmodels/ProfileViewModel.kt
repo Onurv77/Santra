@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.santra.data.dao.SantraDao
 import com.example.santra.data.entities.ProfileTable
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +22,24 @@ class ProfileViewModel(private val santraDao: SantraDao): ViewModel() {
             _profile.postValue(profile)
         }
 
+    }
+
+    fun updatePhoneFromProfileTableByStudentId(phone: String, studentId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            santraDao.updatePhoneFromProfileTableByStudentId(phone, studentId)
+        }
+    }
+
+    private fun getPasswordFromLogin(studentId: String): String {
+        return santraDao.getPasswordFromLogin(studentId)
+    }
+
+    fun updatePasswordFromLoginTableByStudentId(oldPassword: String, newPassword: String, studentId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if(getPasswordFromLogin(studentId) == oldPassword) {
+                santraDao.updatePasswordFromLogin(newPassword, studentId)
+            }
+        }
     }
 
 }

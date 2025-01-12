@@ -74,7 +74,7 @@ fun AppNavigation(db:AppDatabase) {
             profileViewModel,
             chatViewModel) }
         composable("profile") { ProfileScreen(navController, profileViewModel, loginViewModel) }
-        composable("settings") { SettingsScreen(navController) }
+        composable("settings") { SettingsScreen(navController, profileViewModel, loginViewModel) }
         composable(
             "message/{chatId}/{userName}",
             arguments = listOf(

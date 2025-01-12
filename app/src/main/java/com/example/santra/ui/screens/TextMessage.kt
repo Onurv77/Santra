@@ -140,13 +140,11 @@ fun TextMessage(
                                 timestamp = currentTimeMillis
                             )
                         )
-
+                        chatViewModel.updateLastTimeAndMessageFromGroupTableByPostId(newMessage, currentTimeMillis, userName)
                         scope.launch {
                             chatViewModel.refreshMessagesTable(userName)
                             chatViewModel.getMessagesTableByChatId(userName)
-                            chatViewModel.updateLastTimeAndMessageFromGroupTableByPostId(newMessage, currentTimeMillis, userName)
 
-                            Log.d("Update", messagesTable.toString())
                         }
 
                         //messages.add(newMessage to true) // Yeni mesajı listeye ekle

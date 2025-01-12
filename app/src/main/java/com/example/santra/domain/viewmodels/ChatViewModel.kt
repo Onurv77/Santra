@@ -33,7 +33,8 @@ class ChatViewModel(private val santraDao: SantraDao) : ViewModel() {
 
     fun updateLastTimeAndMessageFromGroupTableByPostId(lastMessage: String, lastMessageTime: Long, groupName: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            santraDao.updateGroupTableTimeAndMessageByGroupName(lastMessage, lastMessageTime, groupName)
+            santraDao.updateGroupTableTimeByGroupName(lastMessageTime, groupName)
+            santraDao.updateGorupTableLastMessageByGroupName(lastMessage, groupName)
         }
     }
 
@@ -97,4 +98,16 @@ class ChatViewModel(private val santraDao: SantraDao) : ViewModel() {
         return userName
     }
 
+    suspend fun getStudentIdFromPostTableByGroupName(groupName: String): String {
+        return withContext(Dispatchers.IO) {
+            santraDao.getStudentIdFromPostTableByGroupName(groupName = groupName)
+        }
+
+    }
+
+    suspend fun getPhotoFromProfileByStudentId(studentId: String): ByteArray? {
+        return withContext(Dispatchers.IO) {
+            santraDao.getAvatarFromProfileTableByStudentId(studentId)
+        }
+    }
 }

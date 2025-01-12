@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -24,14 +25,25 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.santra.R
+import com.example.santra.data.AppDatabase
+import com.example.santra.domain.viewmodels.LoginViewModel
+import com.example.santra.domain.viewmodels.ProfileViewModel
 import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
 import com.example.santra.ui.components.TopBarContent
 
 @Composable
-fun SettingsScreen(navController: NavController) {
+fun SettingsScreen(navController: NavController,
+                   profileViewModel: ProfileViewModel,
+                   loginViewModel: LoginViewModel) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    var phone by remember { mutableStateOf("") }
+    var oldPassword by remember { mutableStateOf("") }
+    var newPassword1 by remember { mutableStateOf("") }
+    var newPassword2 by remember { mutableStateOf("") }
+    val loggedInStudentId by loginViewModel.loggedInStudentId.observeAsState()
 
     Box {
         // Arka plan görüntüsü
@@ -59,8 +71,8 @@ fun SettingsScreen(navController: NavController) {
                         .padding(start = 30.dp, end = 30.dp)
                 )
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = phone,
+                    onValueChange = {phone = it},
                     placeholder = { Text("Telefon Numarası Değiştir", color = Color.DarkGray) },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -74,7 +86,9 @@ fun SettingsScreen(navController: NavController) {
                         unfocusedTextColor = Color(0xFF000000)
                     ),
                 )
-                ActionButton("Onayla")
+                ActionButton("Onayla"){
+                    profileViewModel.updatePhoneFromProfileTableByStudentId(phone,loggedInStudentId!!)
+                }
 
                 Spacer(
                     modifier = Modifier
@@ -93,8 +107,8 @@ fun SettingsScreen(navController: NavController) {
                         .padding(start = 15.dp, end = 15.dp, top = 10.dp)
                 )
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = oldPassword,
+                    onValueChange = {oldPassword = it},
                     placeholder = { Text("Güncel şifre", color = Color.DarkGray) },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -109,8 +123,8 @@ fun SettingsScreen(navController: NavController) {
                     )
                 )
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = newPassword1,
+                    onValueChange = {newPassword1 = it},
                     placeholder = { Text("Yeni şifre", color = Color.DarkGray) },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -125,8 +139,8 @@ fun SettingsScreen(navController: NavController) {
                     )
                 )
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = newPassword2,
+                    onValueChange = {newPassword2 = it},
                     placeholder = { Text("Yeni şifreyi onayla", color = Color.DarkGray) },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -140,7 +154,11 @@ fun SettingsScreen(navController: NavController) {
                         unfocusedTextColor = Color(0xFF000000)
                     )
                 )
-                ActionButton("Değiştir")
+                ActionButton("Değiştir") {
+                    if(newPassword1 == newPassword2) {
+                        profileViewModel.updatePasswordFromLoginTableByStudentId(oldPassword,newPassword2, loggedInStudentId!!)
+                    }
+                }
 
                 // Çıkış Yap
                 ExitApp()
@@ -150,9 +168,11 @@ fun SettingsScreen(navController: NavController) {
 }
 
 @Composable
-fun ActionButton(text: String) {
+fun ActionButton(text: String,onClick: () -> Unit) {
     Button(
-        onClick = { /* TODO: Add your action */ },
+        onClick = {
+            onClick()
+        },
         modifier = Modifier
             .width(150.dp)
             .height(60.dp)
@@ -221,5 +241,7 @@ fun ExitApp() {
 @Composable
 fun SettingsPreview() {
     val navController = rememberNavController()
-    SettingsScreen(navController)
+    val db = AppDatabase.getDatabase(LocalContext.current)
+    val santradao = db.santraDao()
+    SettingsScreen(navController, ProfileViewModel(santradao), LoginViewModel(santradao))
 }
