@@ -16,10 +16,11 @@ class PostViewModel(private val santraDao: SantraDao): ViewModel() {
 
     val postsWithProfile: LiveData<List<PostWithProfile>> = santraDao.getPostsWithProfile()
 
-    fun createPost(studentId: String, description: String, date: Long, mevki: String, participantNum: Int) {
+    fun createPost(studentId: String, description: String, date: Long, mevki: String, participantNum: Int, groupName: String) {
 
         val post = PostTable(
             studentId = studentId,
+            groupName = groupName,
             description = description,
             date = date,
             mevki = mevki,

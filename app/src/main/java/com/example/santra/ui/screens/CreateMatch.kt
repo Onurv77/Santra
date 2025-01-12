@@ -27,6 +27,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -46,20 +47,28 @@ import androidx.navigation.compose.rememberNavController
 import com.example.santra.R
 import com.example.santra.data.AppDatabase
 import com.example.santra.data.dao.SantraDao
+import com.example.santra.data.entities.GroupChatsTable
+import com.example.santra.domain.viewmodels.ChatViewModel
 import com.example.santra.domain.viewmodels.LoginViewModel
 import com.example.santra.domain.viewmodels.PostViewModel
 import com.example.santra.domain.viewmodels.ProfileViewModel
 import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
 import com.example.santra.ui.components.TopBarContent
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
 @Composable
-fun CreateMatch(navController: NavController, postViewModel: PostViewModel, loginViewModel: LoginViewModel, profileViewModel: ProfileViewModel) {
+fun CreateMatch(navController: NavController,
+                postViewModel: PostViewModel,
+                loginViewModel: LoginViewModel,
+                profileViewModel: ProfileViewModel,
+                chatViewModel: ChatViewModel) {
 
+    var groupName by remember { mutableStateOf("") }
     var participantNum by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var mevki by remember { mutableStateOf("") }
@@ -71,6 +80,7 @@ fun CreateMatch(navController: NavController, postViewModel: PostViewModel, logi
     val scope = rememberCoroutineScope()
 
     val loggedInStudentId by loginViewModel.loggedInStudentId.observeAsState()
+    val loggedInStudentName by loginViewModel.loggedInUserName.observeAsState()
     val profile by profileViewModel.profile.observeAsState()
 
     studentId = profile?.studentId ?: loggedInStudentId ?: "bilinmiyor"
@@ -117,6 +127,14 @@ fun CreateMatch(navController: NavController, postViewModel: PostViewModel, logi
                         color = Color.White
                     )
 
+                    OutlinedTextField(
+                        value = groupName,
+                        onValueChange = { groupName = it },
+                        label = { Text("Grup Adı") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                    )
 
                     OutlinedTextField(
                         value = description,
@@ -177,29 +195,37 @@ fun CreateMatch(navController: NavController, postViewModel: PostViewModel, logi
                     Button(
                         onClick = {
 
-                            val calendar = Calendar.getInstance()
-                            calendar.timeInMillis = selectedDate
-                            calendar.set(Calendar.HOUR_OF_DAY, selectedTime.first)
-                            calendar.set(Calendar.MINUTE, selectedTime.second)
-                            val finalDate = calendar.timeInMillis
+                            scope.launch {
+                                val calendar = Calendar.getInstance()
+                                calendar.timeInMillis = selectedDate
+                                calendar.set(Calendar.HOUR_OF_DAY, selectedTime.first)
+                                calendar.set(Calendar.MINUTE, selectedTime.second)
+                                val finalDate = calendar.timeInMillis
 
-                            if (description.isNotBlank() && mevki.isNotBlank() && participantNum.isNotBlank()) {
-                                try {
-                                    val participantNumInt = participantNum.toInt()
-                                    postViewModel.createPost(
-                                        studentId = studentId,
-                                        description = description,
-                                        date = finalDate,
-                                        mevki = mevki,
-                                        participantNum = participantNumInt
-                                    )
-                                    toastMessage = "İlan başarıyla oluşturuldu."
-                                    navController.navigate("Home")
-                                } catch (e: NumberFormatException) {
-                                    toastMessage = "Katılım sayısı geçerli bir tam sayı olmalıdır."
+                                if (description.isNotBlank() && mevki.isNotBlank() && participantNum.isNotBlank()) {
+                                    try {
+                                        val participantNumInt = participantNum.toInt()
+
+                                        // Post oluşturma işlemi
+                                        postViewModel.createPost(
+                                            studentId = studentId,
+                                            groupName = groupName,
+                                            description = description,
+                                            date = finalDate,
+                                            mevki = mevki,
+                                            participantNum = participantNumInt
+                                        )
+
+                                        toastMessage = "İlan başarıyla oluşturuldu."
+                                        navController.navigate("Home")
+                                    } catch (e: NumberFormatException) {
+                                        toastMessage = "Katılım sayısı geçerli bir tam sayı olmalıdır."
+                                    } catch (e: Exception) {
+                                        toastMessage = "Bir hata oluştu: ${e.message}"
+                                    }
+                                } else {
+                                    toastMessage = "Tüm alanları doldurun."
                                 }
-                            } else {
-                                toastMessage = "Tüm alanları doldurun."
                             }
                         },
                         modifier = Modifier
@@ -217,13 +243,4 @@ fun CreateMatch(navController: NavController, postViewModel: PostViewModel, logi
                 }
             }
         }
-}
-
-@Preview
-@Composable
-fun preMatch(){
-    val navController = rememberNavController()
-    val db = AppDatabase.getDatabase(LocalContext.current)
-    val santraDao = db.santraDao()
-    CreateMatch(navController, PostViewModel(santraDao), LoginViewModel(santraDao), ProfileViewModel(santraDao))
 }

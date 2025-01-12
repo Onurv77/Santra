@@ -68,7 +68,11 @@ fun AppNavigation(db:AppDatabase) {
                 chatViewModel = chatViewModel)
         }
         composable("request") { RequestScreen(navController) }
-        composable("creatematch") { CreateMatch(navController, postViewModel, loginViewModel, profileViewModel) }
+        composable("creatematch") { CreateMatch(navController,
+            postViewModel,
+            loginViewModel,
+            profileViewModel,
+            chatViewModel) }
         composable("profile") { ProfileScreen(navController, profileViewModel, loginViewModel) }
         composable("settings") { SettingsScreen(navController) }
         composable(

@@ -144,53 +144,53 @@ fun Pager(navController: NavController, posts: List<PostWithProfile>) {
 
 }
 
-@Preview
-@Composable
-fun PreviewLazyRowContent() {
-    // Örnek bir PostWithProfile listesi oluşturuyoruz
-    val samplePosts = listOf(
-        PostWithProfile(
-            postId = 1,
-            postStudentId = "123",
-            postParticipantNum = 1,
-            postDescription = "Bu bir açıklama örneğidir.",
-            postDate = 1672531200000, // Örnek tarih (epoch time)
-            postMevki = "Mevki1",
-            profileUsername = "Kullanıcı1",
-            profileAvatarUrl = null, // Avatar URL'si yoksa null kullanabilirsiniz
-            profileRank = "Rütbe1",
-            profilePhone = "1234567890"
-        ),
-        PostWithProfile(
-            postId = 2,
-            postStudentId = "123",
-            postParticipantNum = 1,
-            postDescription = "Başka bir açıklama örneği.",
-            postDate = 1672617600000, // Örnek tarih (epoch time)
-            postMevki = "Mevki2",
-            profileUsername = "Kullanıcı2",
-            profileAvatarUrl = null,
-            profileRank = "Rütbe2",
-            profilePhone = "0987654321"
-        ),
-        PostWithProfile(
-            postId = 3,
-            postStudentId = "123",
-            postParticipantNum = 1,
-            postDescription = "Bir başka açıklama örneği daha.",
-            postDate = null, // Tarih bilinmiyorsa null
-            postMevki = "Mevki3",
-            profileUsername = "Kullanıcı3",
-            profileAvatarUrl = null,
-            profileRank = "Rütbe3",
-            profilePhone = "1122334455"
-        )
-    )
-
-    // Preview sırasında bir NavController oluşturuyoruz
-    val navController = rememberNavController()
-
-    Pager(navController = navController, posts = samplePosts)
-}
-
+//@Preview
+//@Composable
+//fun PreviewLazyRowContent() {
+//    // Örnek bir PostWithProfile listesi oluşturuyoruz
+//    val samplePosts = listOf(
+//        PostWithProfile(
+//            postId = 1,
+//            postStudentId = "123",
+//            postParticipantNum = 1,
+//            postDescription = "Bu bir açıklama örneğidir.",
+//            postDate = 1672531200000, // Örnek tarih (epoch time)
+//            postMevki = "Mevki1",
+//            profileUsername = "Kullanıcı1",
+//            profileAvatarUrl = null, // Avatar URL'si yoksa null kullanabilirsiniz
+//            profileRank = "Rütbe1",
+//            profilePhone = "1234567890"
+//        ),
+//        PostWithProfile(
+//            postId = 2,
+//            postStudentId = "123",
+//            postParticipantNum = 1,
+//            postDescription = "Başka bir açıklama örneği.",
+//            postDate = 1672617600000, // Örnek tarih (epoch time)
+//            postMevki = "Mevki2",
+//            profileUsername = "Kullanıcı2",
+//            profileAvatarUrl = null,
+//            profileRank = "Rütbe2",
+//            profilePhone = "0987654321"
+//        ),
+//        PostWithProfile(
+//            postId = 3,
+//            postStudentId = "123",
+//            postParticipantNum = 1,
+//            postDescription = "Bir başka açıklama örneği daha.",
+//            postDate = null, // Tarih bilinmiyorsa null
+//            postMevki = "Mevki3",
+//            profileUsername = "Kullanıcı3",
+//            profileAvatarUrl = null,
+//            profileRank = "Rütbe3",
+//            profilePhone = "1122334455"
+//        )
+//    )
+//
+//    // Preview sırasında bir NavController oluşturuyoruz
+//    val navController = rememberNavController()
+//
+//    Pager(navController = navController, posts = samplePosts)
+//}
+//
 
