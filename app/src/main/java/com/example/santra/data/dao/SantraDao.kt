@@ -17,6 +17,13 @@ import com.example.santra.data.entities.ProfileTable
 interface SantraDao {
 
     //LoginTable
+
+    @Query("UPDATE LoginTable SET studentPassword=:studentPassword WHERE studentId=:studentId")
+    suspend fun updatePasswordFromLogin(studentPassword: String, studentId: String)
+
+    @Query("SELECT studentPassword FROM LoginTable WHERE studentId = :studentId")
+    fun getPasswordFromLogin(studentId: String): String
+
     @Query("SELECT * FROM LoginTable")
     fun getAll(): List<LoginTable>
 
@@ -37,6 +44,12 @@ interface SantraDao {
     @Query("SELECT * FROM ProfileTable WHERE studentId = :studentId")
     suspend fun getProfileByStudentId(studentId: String): ProfileTable?
 
+    @Query("SELECT avatar FROM ProfileTable WHERE studentId=:studentId")
+    suspend fun getAvatarFromProfileTableByStudentId(studentId: String): ByteArray?
+
+    @Query("UPDATE ProfileTable SET phone = :phone WHERE studentId = :studentId")
+    suspend fun updatePhoneFromProfileTableByStudentId(phone: String, studentId: String)
+
 
     //PostTable
     @Insert
@@ -47,6 +60,9 @@ interface SantraDao {
 
     @Query("DELETE FROM PostTable WHERE date < :currentTime")
     suspend fun deletePostsOlderThan(currentTime: Long)
+
+    @Query("SELECT studentId FROM PostTable WHERE groupName=:groupName")
+    suspend fun getStudentIdFromPostTableByGroupName(groupName: String): String
 
 
     //PostParticipantsTable
@@ -120,8 +136,11 @@ interface SantraDao {
     @Query("SELECT * FROM GroupChatsTable")
     suspend fun getGroupChatsTable(): List<GroupChatsTable>
 
-    @Query("UPDATE GroupChatsTable SET lastMessageTime=:lastMessageTime, lastMessage=:lastMessage WHERE groupName=:groupName")
-    suspend fun updateGroupTableTimeAndMessageByGroupName(lastMessage: String, lastMessageTime: Long, groupName: String)
+    @Query("UPDATE GroupChatsTable SET lastMessageTime=:lastMessageTime WHERE groupName=:groupName")
+    suspend fun updateGroupTableTimeByGroupName(lastMessageTime: Long, groupName: String)
+
+    @Query("UPDATE GroupChatsTable SET lastMessage=:lastMessage WHERE groupName=:groupName")
+    suspend fun updateGorupTableLastMessageByGroupName(lastMessage: String, groupName: String)
 
     //chatmessage
     @Insert
