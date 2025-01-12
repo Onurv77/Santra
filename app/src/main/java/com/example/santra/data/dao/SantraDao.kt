@@ -5,7 +5,9 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import com.example.santra.data.entities.GroupChatsTable
 import com.example.santra.data.entities.LoginTable
+import com.example.santra.data.entities.MessagesTable
 import com.example.santra.data.entities.PostParticipantsTable
 import com.example.santra.data.entities.PostTable
 import com.example.santra.data.entities.PostWithProfile
@@ -17,6 +19,9 @@ interface SantraDao {
     //LoginTable
     @Query("SELECT * FROM LoginTable")
     fun getAll(): List<LoginTable>
+
+    @Query("SELECT userName FROM LoginTable WHERE studentId = :studentId")
+    fun getUserNameFromLoginTable(studentId: String): String
 
     @Insert
     suspend fun insertLoginTable(logintableinsert: LoginTable)
@@ -47,6 +52,9 @@ interface SantraDao {
     //PostParticipantsTable
     @Insert
     suspend fun insertPostParticipantsTable(postParticipantsTable: PostParticipantsTable)
+
+    @Query("SELECT id FROM PostTable WHERE studentId = :studentId")
+    suspend fun getPostIdbyStudentId(studentId: String):Int
 
     @Query("""
     SELECT LoginTable.userName 
@@ -91,6 +99,32 @@ interface SantraDao {
 
     @Query("DELETE FROM LoginTable")
     suspend fun deleteAll()
+
+    //chat
+    @Insert
+    suspend fun insertGroupChatsTable(groupChatsTable: GroupChatsTable)
+
+    @Query("DELETE FROM GroupChatsTable WHERE postId = :postId")
+    suspend fun removeGroupChatsTablebyPostId(postId: Int)
+
+    @Query("SELECT * FROM GroupChatsTable WHERE studentId = :studentId")
+    suspend fun getChatTablebyPostId(studentId: String): List<GroupChatsTable>
+
+    @Query("SELECT * FROM GroupChatsTable WHERE studentId != :studentId")
+    suspend fun getGroupChatsTableOthers(studentId: String):List<GroupChatsTable>
+
+    @Query("SELECT * FROM GroupChatsTable")
+    suspend fun getGroupChatsTable(): List<GroupChatsTable>
+
+    //chatmessage
+    @Insert
+    suspend fun insertMessagesTable(messagesTable: MessagesTable)
+
+    @Query("SELECT * FROM MessagesTable WHERE groupName=:groupName")
+    suspend fun getMessagesTableByChatId(groupName: String): List<MessagesTable>
+
+    @Query("SELECT * FROM MessagesTable")
+    suspend fun getMessagesTable(): List<MessagesTable>
 
 }
 
