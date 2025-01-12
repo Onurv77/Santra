@@ -28,6 +28,14 @@ class MainActivity : ComponentActivity() {
             allData.forEach { data ->
                 Log.d("MainActivity", "StudentID: ${data.id}, StudentNumber: ${data.studentId}, StudentPassword: ${data.studentPassword}")
             }
+            val data = santraDao.getGroupChatsTable()
+            data.forEach { item ->
+                Log.d("ornek", item.toString())
+            }
+            val messages = santraDao.getMessagesTable()
+            messages.forEach {item ->
+                Log.d("ornek1", item.toString())
+            }
         }
 
         setContent {

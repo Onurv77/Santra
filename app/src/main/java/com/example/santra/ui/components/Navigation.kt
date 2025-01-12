@@ -9,6 +9,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.room.Database
 import com.example.santra.data.AppDatabase
+import com.example.santra.domain.viewmodels.ChatViewModel
+import com.example.santra.domain.viewmodels.ChatViewModelFactory
 import com.example.santra.domain.viewmodels.LoginViewModel
 import com.example.santra.domain.viewmodels.LoginViewModelFactory
 import com.example.santra.domain.viewmodels.PostParticipantsViewModel
@@ -45,12 +47,14 @@ fun AppNavigation(db:AppDatabase) {
     val postViewModel: PostViewModel = viewModel(factory = postViewModelFactory)
     val postParticipantsViewModelFactory = PostParticipantsViewModelFactory(db.santraDao())
     val postParticipantsViewModel: PostParticipantsViewModel = viewModel(factory = postParticipantsViewModelFactory)
+    val chatViewModelFactory = ChatViewModelFactory(db.santraDao())
+    val chatViewModel: ChatViewModel = viewModel(factory = chatViewModelFactory)
 
     NavHost(navController = navController, startDestination = "login") {
         composable("login") { LoginScreen(navController, loginViewModel) }
         composable("home") { HomeScreen(navController, postViewModel) }
         composable("register") { RegisterScreen(navController, registerViewModel) }
-        composable("chat") { ChatScreen(navController) }
+        composable("chat") { ChatScreen(navController, chatViewModel, loginViewModel) }
         composable(
             "announcement_detail/{announcementId}",
             arguments = listOf(navArgument("announcementId") { type = NavType.StringType })
@@ -60,7 +64,8 @@ fun AppNavigation(db:AppDatabase) {
                 announcementId = announcementId,
                 viewModel = postViewModel,
                 loginViewModel = loginViewModel,
-                postParticipantsViewModel = postParticipantsViewModel)
+                postParticipantsViewModel = postParticipantsViewModel,
+                chatViewModel = chatViewModel)
         }
         composable("request") { RequestScreen(navController) }
         composable("creatematch") { CreateMatch(navController, postViewModel, loginViewModel, profileViewModel) }
@@ -75,7 +80,7 @@ fun AppNavigation(db:AppDatabase) {
         ) { backStackEntry ->
             val chatId = backStackEntry.arguments?.getInt("chatId") ?: -1
             val userName = backStackEntry.arguments?.getString("userName") ?: "Unknown"
-            TextMessage(navController = navController, chatId = chatId, userName = userName)
+            TextMessage(navController = navController, chatId = chatId, userName = userName, chatViewModel, loginViewModel)
         }
 
     }

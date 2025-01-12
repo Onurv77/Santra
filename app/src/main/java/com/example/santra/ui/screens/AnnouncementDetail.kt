@@ -51,6 +51,8 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.santra.R
 import com.example.santra.data.AppDatabase
+import com.example.santra.data.entities.GroupChatsTable
+import com.example.santra.domain.viewmodels.ChatViewModel
 import com.example.santra.domain.viewmodels.LoginViewModel
 import com.example.santra.domain.viewmodels.PostParticipantsViewModel
 import com.example.santra.domain.viewmodels.PostViewModel
@@ -67,7 +69,12 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun AnnouncementDetailScreen(navController: NavController, announcementId: String?, viewModel: PostViewModel, postParticipantsViewModel: PostParticipantsViewModel, loginViewModel: LoginViewModel) {
+fun AnnouncementDetailScreen(navController: NavController,
+                             announcementId: String?,
+                             viewModel: PostViewModel,
+                             postParticipantsViewModel: PostParticipantsViewModel,
+                             loginViewModel: LoginViewModel,
+                             chatViewModel: ChatViewModel) {
 
 
     val postId = announcementId?.toIntOrNull() ?: 0
@@ -253,12 +260,14 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
                                                                     postDetails.postId,
                                                                     postDetails.postParticipantNum
                                                                 )
+                                                            chatViewModel.removeGroupChatsTable(postDetails.postId)
                                                         }
                                                     },
                                                     onFailure = {
                                                         //Hata kısmı
                                                     }
                                                 )
+
 
                                             } else {
                                                 postParticipantsViewModel.addParticipant(
@@ -277,12 +286,22 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
                                                                     postDetails.postId,
                                                                     postDetails.postParticipantNum
                                                                 )
+                                                            chatViewModel.insertGroupChatsTable(
+                                                                GroupChatsTable(
+                                                                    postId = postDetails.postId,
+                                                                    studentId = loggedInStudentId!!,
+                                                                    groupName = postDetails.profileUsername?.toUpperCase(),
+                                                                    lastMessage = null,
+                                                                    lastMessageTime = null
+                                                                )
+                                                            )
                                                         }
                                                     },
                                                     onFailure = {
                                                         //Hata kısmı
                                                     }
                                                 )
+
                                             }
                                         },
                                         shape = RoundedCornerShape(8.dp),
@@ -317,6 +336,7 @@ fun AnnouncementDetailScreen(navController: NavController, announcementId: Strin
                                                                     postDetails.postId,
                                                                     postDetails.postParticipantNum
                                                                 )
+                                                            chatViewModel.removeGroupChatsTable(postDetails.postId)
                                                         }
                                                     },
                                                     onFailure = {

@@ -30,21 +30,41 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.santra.R
+import com.example.santra.data.entities.GroupChatsTable
+import com.example.santra.domain.viewmodels.ChatViewModel
+import com.example.santra.domain.viewmodels.LoginViewModel
 
 @Composable
-fun ChatScreen(navController: NavController) {
+fun ChatScreen(navController: NavController,
+               chatViewModel: ChatViewModel,
+               loginViewModel: LoginViewModel
+) {
+    val groupChat by chatViewModel.getChatTable.observeAsState(emptyList())
+    val loggedInStudentId by loginViewModel.loggedInStudentId.observeAsState()
+
+    LaunchedEffect(loggedInStudentId) {
+        loggedInStudentId?.let { id ->
+            chatViewModel.getChatTablebyPostId(id)
+        }
+    }
+
+
     Scaffold(
         topBar = {
             Box(
@@ -88,26 +108,37 @@ fun ChatScreen(navController: NavController) {
                     .padding(paddingValues)
             ) {
                 // Sohbet Listesi
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(dummyChatList) { chat ->
-                        ChatListItem(chat = chat, onClick = {
-                            // Sohbete tıklandığında bir mesajlaşma ekranına yönlendirilebilir
-                            navController.navigate("message/${chat.id}/${chat.userName}")
-                        })
-                        Divider(
-                            color = Color(0xFF000000), // Çizgi rengi
-                            thickness = 1.dp, // Çizgi kalınlığı
-                            //modifier = Modifier.padding(horizontal = 16.dp) // Yatay boşluk
-                        )
+                if (groupChat.isEmpty()) {
+                    Text(
+                        text = "Henüz sohbet yok.",
+                        modifier = Modifier.fillMaxSize(),
+                        textAlign = TextAlign.Center,
+                        color = Color.Gray
+                    )
+                } else {
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                        items(groupChat) { chat ->
+                            ChatListItem(chat = chat, onClick = {
+                                navController.navigate("message/${chat.id}/${chat.groupName}")
+                            })
+                        }
                     }
                 }
+                Divider(
+                    color = Color(0xFF000000), // Çizgi rengi
+                    thickness = 1.dp, // Çizgi kalınlığı
+                    //modifier = Modifier.padding(horizontal = 16.dp) // Yatay boşluk
+                )
             }
         }
     )
 }
 
+
+
+
 @Composable
-fun ChatListItem(chat: ChatItem, onClick: () -> Unit) {
+fun ChatListItem(chat: GroupChatsTable, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -133,14 +164,14 @@ fun ChatListItem(chat: ChatItem, onClick: () -> Unit) {
         ) {
             // Kullanıcı Adı
             Text(
-                text = chat.userName,
+                text = chat.groupName?:"Bilinmeyen Grup",
                 fontSize = 25.sp,
                 fontWeight = FontWeight.W700,
                 color = Color.Black
             )
             // Son Mesaj
             Text(
-                text = chat.lastMessage,
+                text = chat.lastMessage?: " ",
                 fontSize = 16.sp,
                 color = Color(0xFF000000),
                 maxLines = 1,
@@ -153,32 +184,9 @@ fun ChatListItem(chat: ChatItem, onClick: () -> Unit) {
 
         // Mesaj Zamanı
         Text(
-            text = chat.time,
+            text = chat.lastMessageTime.toString(),
             fontSize = 12.sp,
             color = Color.Gray,
         )
     }
 }
-
-data class ChatItem(
-    val id: Int,
-    val userName: String,
-    val lastMessage: String,
-    val time: String
-)
-
-// Dummy Chat List
-val dummyChatList = listOf(
-    ChatItem(1, "Mert", "Merhaba, nasılsın?", "14:30"),
-    ChatItem(2, "Yılmaz", "Bugün", "15:01"),
-    ChatItem(3, "Aslı", "Teşekkürler", "21:05")
-)
-
-@Preview
-@Composable
-fun PreviewChat() {
-    val navController = rememberNavController()
-    ChatScreen(navController)
-}
-
-
