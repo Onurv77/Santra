@@ -17,6 +17,7 @@ data class ProfileTable(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "studentId") val studentId: String,
     @ColumnInfo(name = "userName") val userName: String,
+    @ColumnInfo(name = "aboutMe") val aboutMe: String = "",
     @ColumnInfo(name = "avatar", typeAffinity = ColumnInfo.BLOB) val avatar: ByteArray?,
     @ColumnInfo(name = "rank") val rank: String?,
     @ColumnInfo(name = "honor") val honor: String?,

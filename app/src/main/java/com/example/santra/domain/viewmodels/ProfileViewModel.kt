@@ -42,4 +42,10 @@ class ProfileViewModel(private val santraDao: SantraDao): ViewModel() {
         }
     }
 
+    fun updateAboutMe(aboutMe:String, studentId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            santraDao.updateAboutMe(aboutMe, studentId)
+        }
+    }
+
 }

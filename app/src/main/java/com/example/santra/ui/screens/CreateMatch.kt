@@ -54,6 +54,7 @@ import com.example.santra.R
 import com.example.santra.data.AppDatabase
 import com.example.santra.data.dao.SantraDao
 import com.example.santra.data.entities.GroupChatsTable
+import com.example.santra.data.entities.PostTable
 import com.example.santra.domain.viewmodels.ChatViewModel
 import com.example.santra.domain.viewmodels.LoginViewModel
 import com.example.santra.domain.viewmodels.PostViewModel
@@ -145,7 +146,7 @@ fun CreateMatch(navController: NavController,
                         colors = TextFieldDefaults.colors(
                             unfocusedContainerColor = Color(0xFFD9D9D9),
                             focusedContainerColor = Color(0xFFFFFFFF),
-                            unfocusedTextColor = Color(0xFFB0B0B0),
+                            unfocusedTextColor = Color(0xFF000000),
                         ),
                         shape = RoundedCornerShape(15.dp)
                     )
@@ -160,7 +161,7 @@ fun CreateMatch(navController: NavController,
                         colors = TextFieldDefaults.colors(
                             unfocusedContainerColor = Color(0xFFD9D9D9),
                             focusedContainerColor = Color(0xFFFFFFFF),
-                            unfocusedTextColor = Color(0xFFB0B0B0),
+                            unfocusedTextColor = Color(0xFF000000),
                         ),
                         shape = RoundedCornerShape(15.dp)
                     )
@@ -176,7 +177,7 @@ fun CreateMatch(navController: NavController,
                         colors = TextFieldDefaults.colors(
                             unfocusedContainerColor = Color(0xFFD9D9D9),
                             focusedContainerColor = Color(0xFFFFFFFF),
-                            unfocusedTextColor = Color(0xFFB0B0B0),
+                            unfocusedTextColor = Color(0xFF000000),
                         ),
                         shape = RoundedCornerShape(15.dp)
                     )
@@ -195,7 +196,7 @@ fun CreateMatch(navController: NavController,
                         colors = TextFieldDefaults.colors(
                             unfocusedContainerColor = Color(0xFFD9D9D9),
                             focusedContainerColor = Color(0xFFFFFFFF),
-                            unfocusedTextColor = Color(0xFFB0B0B0),
+                            unfocusedTextColor = Color(0xFF000000),
                         ),
                         shape = RoundedCornerShape(15.dp)
                     )
@@ -238,15 +239,22 @@ fun CreateMatch(navController: NavController,
                                     try {
                                         val participantNumInt = participantNum.toInt()
 
-                                        // Post oluşturma işlemi
-                                        postViewModel.createPost(
+                                        val postTable = PostTable(
                                             studentId = studentId,
                                             groupName = groupName,
+                                            participantNum = participantNumInt,
                                             description = description,
                                             date = finalDate,
-                                            mevki = mevki,
-                                            participantNum = participantNumInt
+                                            mevki = mevki
                                         )
+                                        val groupChatsTable = GroupChatsTable(
+                                            postId = 0,
+                                            studentId = studentId,
+                                            groupName = groupName,
+                                            lastMessage = null,
+                                            lastMessageTime = null
+                                        )
+                                        postViewModel.createPostAndGroupChat(postTable, groupChatsTable)
 
                                         toastMessage = "İlan başarıyla oluşturuldu."
                                         navController.navigate("Home")
