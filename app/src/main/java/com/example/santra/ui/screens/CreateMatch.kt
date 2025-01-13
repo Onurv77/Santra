@@ -17,14 +17,19 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TextButton
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,6 +45,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -123,8 +129,10 @@ fun CreateMatch(navController: NavController,
                     Text(
                         text = "İlan Oluştur",
                         style = MaterialTheme.typography.headlineLarge,
-                        modifier = Modifier.padding(bottom = 16.dp),
-                        color = Color.White
+                        modifier = Modifier
+                            .padding(bottom = 16.dp),
+                        color = Color.White,
+                        fontWeight = FontWeight.W700
                     )
 
                     OutlinedTextField(
@@ -133,7 +141,13 @@ fun CreateMatch(navController: NavController,
                         label = { Text("Grup Adı") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp)
+                            .padding(vertical = 8.dp),
+                        colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = Color(0xFFD9D9D9),
+                            focusedContainerColor = Color(0xFFFFFFFF),
+                            unfocusedTextColor = Color(0xFFB0B0B0),
+                        ),
+                        shape = RoundedCornerShape(15.dp)
                     )
 
                     OutlinedTextField(
@@ -142,7 +156,13 @@ fun CreateMatch(navController: NavController,
                         label = { Text("Açıklama") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp)
+                            .padding(vertical = 8.dp),
+                        colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = Color(0xFFD9D9D9),
+                            focusedContainerColor = Color(0xFFFFFFFF),
+                            unfocusedTextColor = Color(0xFFB0B0B0),
+                        ),
+                        shape = RoundedCornerShape(15.dp)
                     )
 
 
@@ -152,7 +172,13 @@ fun CreateMatch(navController: NavController,
                         label = { Text("Mevki") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp)
+                            .padding(vertical = 8.dp),
+                        colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = Color(0xFFD9D9D9),
+                            focusedContainerColor = Color(0xFFFFFFFF),
+                            unfocusedTextColor = Color(0xFFB0B0B0),
+                        ),
+                        shape = RoundedCornerShape(15.dp)
                     )
 
                     OutlinedTextField(
@@ -165,7 +191,13 @@ fun CreateMatch(navController: NavController,
                         label = { Text("Katılım Sayısı") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp)
+                            .padding(vertical = 8.dp),
+                        colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = Color(0xFFD9D9D9),
+                            focusedContainerColor = Color(0xFFFFFFFF),
+                            unfocusedTextColor = Color(0xFFB0B0B0),
+                        ),
+                        shape = RoundedCornerShape(15.dp)
                     )
 
 
@@ -230,7 +262,11 @@ fun CreateMatch(navController: NavController,
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 16.dp)
+                            .padding(vertical = 16.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF7B00FF),
+                            contentColor = Color(0xFFFFFFFF)
+                        )
                     ) {
                         Text("İlan Oluştur")
                     }

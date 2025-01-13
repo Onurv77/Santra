@@ -118,10 +118,6 @@ fun AnnouncementDetailScreen(navController: NavController,
         }
 
 
-
-
-//        val participantUsernames by postParticipantsViewModel.getParticipantUsernames(postId)
-//            .observeAsState(emptyList())
         val participant by postParticipantsViewModel.participantUsernames.observeAsState(
             emptyList()
         )
@@ -215,8 +211,6 @@ fun AnnouncementDetailScreen(navController: NavController,
                                     .padding(start = 20.dp, bottom = 20.dp)
                             )
 
-
-
                             Column(
                                 modifier = Modifier.padding(start = 30.dp, bottom = 35.dp)
                             ) {
@@ -231,14 +225,6 @@ fun AnnouncementDetailScreen(navController: NavController,
                                     )
                                 }
                             }
-
-
-
-//                            Text(
-//                                text = "Katılımcılar: ${participant.joinToString(", ")}",
-//                                style = MaterialTheme.typography.bodyLarge,
-//                                modifier = Modifier.padding(start = 30.dp, bottom = 35.dp)
-//                            )
 
                             if (!ownRoom) {
                                 if (!isFull) {

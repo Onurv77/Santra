@@ -145,7 +145,6 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
             TextField(
                 value = studentId,
                 onValueChange = { studentId = it },
-                //label = { Text("Öğrenci Numarası")},
                 shape = RoundedCornerShape(12.dp),
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
@@ -266,7 +265,7 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
                                     userName = userName,
                                     avatar = avatarToSend
                                 )
-                                navController.navigate("login")
+                                navController.navigate("success")
                             }
                         }
                     },
@@ -289,26 +288,6 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
         }
     }
 }
-
-//                        Önceki Onclick
-//                        if (mail != "" && studentId != "" && studentPassword != "" && phone != "" && userName != "") {
-//                            registerViewModel.registerUser(
-//                                studentId = studentId,
-//                                studentPassword = studentPassword,
-//                                mail = mail,
-//                                phone = phone,
-//                                userName = userName,
-//                                avatar = avatarToSend
-//                            )
-//                            navController.navigate("login")
-//                        } else {
-//                            Toast.makeText(
-//                                context,
-//                                "Lütfen tüm alanları doldurun",
-//                                Toast.LENGTH_LONG
-//                            ).show()
-//                        }
-
 
 @Preview
 @Composable

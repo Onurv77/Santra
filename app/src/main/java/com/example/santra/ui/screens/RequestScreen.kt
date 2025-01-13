@@ -59,11 +59,12 @@ fun RequestScreen(navController: NavController) {
                 ) {
                     Image(
                         contentDescription = "matching",
-                        painter = painterResource(R.drawable.rakipbul),
+                        painter = painterResource(R.drawable.ilan_ver),
                         modifier = Modifier
                             .weight(1f)
                             .padding(16.dp)
                             .clickable { navController.navigate("creatematch") }
+                            .fillMaxSize()
                     )
                 }
             }
