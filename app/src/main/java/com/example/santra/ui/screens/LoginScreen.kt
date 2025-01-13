@@ -29,25 +29,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.santra.R
-import com.example.santra.data.AppDatabase
-import com.example.santra.data.dao.SantraDao
 import com.example.santra.domain.viewmodels.LoginViewModel
 import com.example.santra.ui.components.BackgroundImage
 
@@ -134,7 +128,7 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
                 label = { Text("Öğrenci Numarası") },
                 placeholder = { Text("Öğrenci numaranızı giriniz") },
                 singleLine = true,
-                shape = RoundedCornerShape(12.dp), // Oval kenarlar
+                shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
@@ -201,7 +195,6 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
                 ) {
                     Text("Giriş Yap")
                 }
-
 
                     Spacer(modifier = Modifier.width(16.dp))
 

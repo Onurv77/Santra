@@ -1,6 +1,5 @@
 package com.example.santra.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,17 +13,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -38,8 +32,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
-import androidx.compose.ui.Alignment.Companion.CenterStart
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -82,13 +74,13 @@ fun TextMessage(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF013220)) // Koyu yeşil arka plan
+            .background(Color(0xFF013220))
     ) {
         // Top Bar
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFF0B4100)) // Daha koyu yeşil tonunda bir arka plan
+                .background(Color(0xFF0B4100))
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -120,7 +112,7 @@ fun TextMessage(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
-                .background(Color(0xFF002200)), // Daha açık bir yeşil ton
+                .background(Color(0xFF002200)),
             contentAlignment = Alignment.TopCenter
         ) {
             LazyColumn(
@@ -194,7 +186,6 @@ fun TextMessage(
                     fontSize = 14.sp
                 )
             }
-
         }
     }
 }

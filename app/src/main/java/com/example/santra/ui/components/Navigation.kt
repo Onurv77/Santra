@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import androidx.room.Database
 import com.example.santra.data.AppDatabase
 import com.example.santra.domain.viewmodels.ChatViewModel
 import com.example.santra.domain.viewmodels.ChatViewModelFactory
