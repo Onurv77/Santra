@@ -1,12 +1,37 @@
 # Santra
 
-Santra is a Kotlin-based project designed to provide a scalable and user-friendly architecture for modern Android application development. The project leverages best practices and cutting-edge technologies to deliver a high-quality codebase.
+Santra is a Kotlin-based mobile application designed to simplify organizing futsal matches. It provides users with features like creating match announcements, searching for players, and a built-in chat system.  
 
-## Features
+## Key Features  
 
-- *Modular Architecture*: The project is structured into modules, enabling better code organization and testability.
-- *MVVM Pattern*: Implements the Model-View-ViewModel design pattern to maintain a clear separation between the UI and business logic.
-- *Jetpack Compose*: Utilizes Jetpack Compose for building UI components declaratively, ensuring a modern and flexible approach to UI development.
+- *Match Announcements:*  
+  Users can create announcements for futsal matches with specific dates, times, and details. These announcements are visible to other users who can join the matches.  
+
+- *Player Search:*  
+  Users can easily find and connect with other players to fill missing spots in their teams.  
+
+- *Chat System:*  
+  The built-in chat feature allows users to communicate easily, discuss match details, and coordinate with other players.  
+
+- *User Profiles:*  
+  Each user can create their own profile and fill out the "About" section to share personal information.  
+
+## Technologies Used  
+
+- *Kotlin:*  
+  The application is built using Kotlin, ensuring a robust and modern codebase.  
+
+- *Jetpack Compose:*  
+  UI components are developed using Jetpack Compose, enabling a declarative and intuitive approach to UI development.  
+
+- *MVVM Design Pattern:*  
+  The application follows the Model-View-ViewModel design pattern to ensure a clean separation between UI and business logic.  
+
+- *Kotlin Coroutines:*  
+  Asynchronous operations are handled with Kotlin Coroutines to deliver a smooth user experience.  
+
+- *Room Database:*  
+  Local data is stored and managed using the Room Persistence Library, ensuring efficient and secure data handling. 
 
 ## Installation
 
@@ -15,11 +40,6 @@ To set up the project on your local machine, follow these steps:
 1. Clone the repository:
    ```bash
    git clone https://github.com/Onurv77/Santra.git
-
-## Usage
-The project can be opened and run using Android Studio. The main activity provides access to the core functionalities of the application.
-Jetpack Compose is used for creating all UI components directly in Kotlin, removing the need for XML-based layouts.
-For detailed information, refer to the comments within the codebase.
 
 ## Contributing
 Contributions are welcome!
