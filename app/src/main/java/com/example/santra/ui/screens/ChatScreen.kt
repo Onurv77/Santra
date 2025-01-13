@@ -37,8 +37,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,6 +62,7 @@ import com.example.santra.R
 import com.example.santra.data.entities.GroupChatsTable
 import com.example.santra.domain.viewmodels.ChatViewModel
 import com.example.santra.domain.viewmodels.LoginViewModel
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -72,8 +75,9 @@ fun ChatScreen(navController: NavController,
 ) {
     val groupChat by chatViewModel.getChatTable.observeAsState(emptyList())
     val loggedInStudentId by loginViewModel.loggedInStudentId.observeAsState()
-    var photo: ByteArray? by remember { mutableStateOf(null) }
-    var photoUri: Uri? by remember { mutableStateOf(null) }
+//    var photo: ByteArray? by remember { mutableStateOf(null) }
+//    var photoUri: Uri? by remember { mutableStateOf(null) }
+    val photoUriMap = remember { mutableStateMapOf<String, Uri?>() } // Sohbetlere göre Uri'ları tutan harita
     val current = LocalContext.current
 
     LaunchedEffect(loggedInStudentId) {
@@ -81,13 +85,23 @@ fun ChatScreen(navController: NavController,
             chatViewModel.getChatTablebyPostId(id)
         }
     }
+//    LaunchedEffect(groupChat) {
+//        groupChat.forEach { i ->
+//            if (i.studentId == loggedInStudentId) {
+//                val tempId = chatViewModel.getStudentIdFromPostTableByGroupName(i.groupName ?: "")
+//                photo = chatViewModel.getPhotoFromProfileByStudentId(tempId)
+//                photoUri = photo?.let { byteArrayToUri(current, it) }
+//            }
+//        }
+//    }
+
     LaunchedEffect(groupChat) {
-        groupChat.forEach { i ->
-            if (i.studentId == loggedInStudentId) {
-                val tempId = chatViewModel.getStudentIdFromPostTableByGroupName(i.groupName ?: "")
-                photo = chatViewModel.getPhotoFromProfileByStudentId(tempId)
-                photoUri = photo?.let { byteArrayToUri(current, it) }
-            }
+        groupChat.forEach { chat ->
+            val groupName = chat.groupName ?: return@forEach
+            val tempId = chatViewModel.getStudentIdFromPostTableByGroupName(groupName)
+            val photo = chatViewModel.getPhotoFromProfileByStudentId(tempId)
+            val uri = photo?.let { byteArrayToUri(current, it) }
+            photoUriMap[groupName] = uri
         }
     }
 
@@ -143,8 +157,16 @@ fun ChatScreen(navController: NavController,
                         color = Color.Gray
                     )
                 } else {
+//                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+//                        items(groupChat) { chat ->
+//                            ChatListItem(chat = chat, photoUri = photoUri, onClick = {
+//                                navController.navigate("message/${chat.id}/${chat.groupName}")
+//                            })
+//                        }
+//                    }
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
                         items(groupChat) { chat ->
+                            val photoUri = photoUriMap[chat.groupName]
                             ChatListItem(chat = chat, photoUri = photoUri, onClick = {
                                 navController.navigate("message/${chat.id}/${chat.groupName}")
                             })

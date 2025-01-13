@@ -3,6 +3,7 @@ package com.example.santra.ui.screens
 import android.content.Context
 import android.net.Uri
 import android.provider.Settings
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -63,6 +64,7 @@ import com.example.santra.domain.viewmodels.ProfileViewModel
 import com.example.santra.ui.components.BackgroundImage
 import com.example.santra.ui.components.BottomBarContent
 import com.example.santra.ui.components.TopBarContent
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -71,9 +73,12 @@ import java.io.IOException
 fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewModel, loginViewModel: LoginViewModel) {
     var userName by remember { mutableStateOf("") }
     var aboutMe by remember { mutableStateOf("") }
+    var newAboutMe by remember { mutableStateOf("") }
     var isEditingAboutMe by remember { mutableStateOf(false) }
     var avatar by remember { mutableStateOf<ByteArray?>(null) }
+    var toastMessage by remember { mutableStateOf("") }
 
+    val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
     val loggedInStudentId by loginViewModel.loggedInStudentId.observeAsState()
@@ -83,6 +88,7 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
         profile?.let {
             userName = it.userName ?: "Kullanıcı adı yok"
             avatar = it.avatar
+            aboutMe = it.aboutMe
         }
     }
 
@@ -180,8 +186,8 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
 
                         if (isEditingAboutMe) {
                             androidx.compose.material3.TextField(
-                                value = aboutMe,
-                                onValueChange = { aboutMe = it },
+                                value = newAboutMe,
+                                onValueChange = { newAboutMe = it },
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(35.dp)),
                                 textStyle = MaterialTheme.typography.bodyMedium,
@@ -215,7 +221,17 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
 
                     // Güncelle Butonu
                     FilledTonalButton(
-                        onClick = { isEditingAboutMe = false },
+                        onClick = {
+                            isEditingAboutMe = false
+                            try {
+                                scope.launch {
+                                    profileViewModel.updateAboutMe(newAboutMe, loggedInStudentId!!)
+                                    profileViewModel.fetchProfile(studentId = loggedInStudentId!!)
+                                }
+                            } catch (e: Exception) {
+                                toastMessage = "Bir hata oluştu: ${e.message}"
+                            }
+                        },
                         modifier = Modifier
                             .width(130.dp)
                             .align(Alignment.CenterHorizontally),
@@ -236,6 +252,11 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
                         )
                     }
                         Spacer(modifier = Modifier.height(20.dp))
+                }
+                if (toastMessage.isNotEmpty()) {
+                    Toast.makeText(LocalContext.current, toastMessage, Toast.LENGTH_SHORT)
+                        .show()
+                    toastMessage = ""
                 }
             }
         }

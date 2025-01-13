@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import com.example.santra.data.entities.GroupChatsTable
 import com.example.santra.data.entities.LoginTable
 import com.example.santra.data.entities.MessagesTable
@@ -38,6 +39,10 @@ interface SantraDao {
 
 
     //ProfileTable
+
+    @Query("UPDATE ProfileTable SET aboutMe=:aboutMe WHERE studentId=:studentId")
+    suspend fun updateAboutMe(aboutMe: String, studentId: String)
+
     @Insert
     suspend fun insertProfileTable(profile: ProfileTable)
 
@@ -151,5 +156,17 @@ interface SantraDao {
 
     @Query("SELECT * FROM MessagesTable")
     suspend fun getMessagesTable(): List<MessagesTable>
+
+    //Transaction
+
+    @Insert
+    suspend fun insertPostTable(postTable: PostTable): Long
+
+    @Transaction
+    suspend fun insertPostAndGroupChat(postTable: PostTable, groupChatsTable: GroupChatsTable) {
+        val postId = insertPostTable(postTable)
+        val updatedGroupChatsTable = groupChatsTable.copy(postId = postId.toInt())
+        insertGroupChatsTable(updatedGroupChatsTable)
+    }
 }
 
