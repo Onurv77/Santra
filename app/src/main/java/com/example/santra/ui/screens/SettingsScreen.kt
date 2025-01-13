@@ -88,6 +88,7 @@ fun SettingsScreen(navController: NavController,
                 )
                 ActionButton("Onayla"){
                     profileViewModel.updatePhoneFromProfileTableByStudentId(phone,loggedInStudentId!!)
+                    navController.navigate("settings_saved_screen")
                 }
 
                 Spacer(
@@ -157,6 +158,7 @@ fun SettingsScreen(navController: NavController,
                 ActionButton("Değiştir") {
                     if(newPassword1 == newPassword2) {
                         profileViewModel.updatePasswordFromLoginTableByStudentId(oldPassword,newPassword2, loggedInStudentId!!)
+                        navController.navigate("settings_saved_screen")
                     }
                 }
 

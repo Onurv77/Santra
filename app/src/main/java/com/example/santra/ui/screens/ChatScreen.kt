@@ -154,7 +154,6 @@ fun ChatScreen(navController: NavController,
                 Divider(
                     color = Color(0xFF000000), // Çizgi rengi
                     thickness = 1.dp, // Çizgi kalınlığı
-                    //modifier = Modifier.padding(horizontal = 16.dp) // Yatay boşluk
                 )
             }
         }

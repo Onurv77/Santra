@@ -1,11 +1,8 @@
 package com.example.santra.ui.components
 
-
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.BottomNavigation
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -96,7 +93,7 @@ fun BottomBarContent(navController: NavController) {
 
 @Preview
 @Composable
-fun preBot() {
+fun PreviewBottomBar() {
     val navController = rememberNavController()
     BottomBarContent(navController)
 }

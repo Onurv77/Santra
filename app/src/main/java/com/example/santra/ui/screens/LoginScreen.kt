@@ -115,7 +115,6 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
-                    //.background(color = Color(0xFF31B700))
                     .padding(vertical = 8.dp)
             ) {
                 Text(
@@ -222,10 +221,3 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
         }
     }
 }
-
-//@Preview
-//@Composable
-//fun preLogin(){
-//    val db = AppDatabase.getDatabase(LocalContext.current)
-//    LoginScreen(rememberNavController(), LoginViewModel(db.santraDao()))
-//}

@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.provider.Settings
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,10 +23,14 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,6 +47,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -62,14 +69,12 @@ import java.io.IOException
 
 @Composable
 fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewModel, loginViewModel: LoginViewModel) {
-
     var userName by remember { mutableStateOf("") }
-    var mail by remember { mutableStateOf("") }
-    var phone by remember { mutableStateOf("") }
+    var aboutMe by remember { mutableStateOf("") }
+    var isEditingAboutMe by remember { mutableStateOf(false) }
     var avatar by remember { mutableStateOf<ByteArray?>(null) }
 
     val context = LocalContext.current
-
 
     val loggedInStudentId by loginViewModel.loggedInStudentId.observeAsState()
     val profile by profileViewModel.profile.observeAsState()
@@ -77,8 +82,6 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
     LaunchedEffect(profile) {
         profile?.let {
             userName = it.userName ?: "Kullanıcı adı yok"
-            mail = it.mail ?: "E-posta yok"
-            phone = it.phone ?: "Telefon numarası yok"
             avatar = it.avatar
         }
     }
@@ -91,80 +94,154 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
 
     BackgroundImage()
 
-
-        Scaffold(containerColor = Color.Transparent,
-            topBar = { TopBarContent(navController) },
-            bottomBar = { BottomBarContent(navController) }) { paddingValues ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
+    Scaffold(
+        containerColor = Color.Transparent,
+        topBar = { TopBarContent(navController) },
+        bottomBar = { BottomBarContent(navController) }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize()
             ) {
-                Column(
-                    modifier = Modifier.fillMaxSize()
-
+                Card(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(20.dp),
+                    shape = RoundedCornerShape(50.dp),
+                    colors = CardDefaults.cardColors(Color.White)
                 ) {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(top = 20.dp, bottom = 20.dp, start = 20.dp, end = 20.dp),
-                        shape = RoundedCornerShape(5.dp),
-                        colors = CardDefaults.outlinedCardColors(Color.White)
+                    Column(
+                        modifier = Modifier.padding(20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        ProfileAvatar(avatar = avatar, context = context)
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Text(
+                            text = userName,
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontSize = 20.sp
+                        )
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
                         Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth()
-                                .padding(30.dp)
+                            modifier = Modifier.padding(vertical = 10.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-
-                            ProfileAvatar(avatar = avatar, context = context)
-
                             Image(
                                 painter = painterResource(R.drawable.rank5_3),
                                 contentDescription = null,
                                 modifier = Modifier
                                     .align(Alignment.Bottom)
-                                    .height(60.dp)
+                                    .height(50.dp)
                                     .weight(1f)
-                            )
-                            Text(
-                                text = userName,
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                                    .padding(end = 0.dp)
-                                    .weight(1f),
-                                style = MaterialTheme.typography.headlineMedium,
-                                fontSize = 25.sp
+                                    .padding(bottom = 10.dp)
                             )
                         }
 
+                        Spacer(modifier = Modifier.height(20.dp))
+
+                        // "Hakkımda" Kısmı
+                        Row (
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "Hakkımda",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(start = 45.dp),
+                                fontWeight = FontWeight.W700,
+                                fontSize = 15.sp,
+                                textAlign = TextAlign.Center
+                            )
+
+                            IconButton(onClick = { isEditingAboutMe = true }) {
+                                Icon(
+                                    painter = painterResource(R.drawable.aboutme_icon),
+                                    contentDescription = "Save",
+                                    tint = Color(0xFF000000),
+                                    modifier = Modifier
+                                        .size(10.dp)
+                                        .weight(0.15f)
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        if (isEditingAboutMe) {
+                            androidx.compose.material3.TextField(
+                                value = aboutMe,
+                                onValueChange = { aboutMe = it },
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(35.dp)),
+                                textStyle = MaterialTheme.typography.bodyMedium,
+                                colors = TextFieldDefaults.colors(
+                                    unfocusedContainerColor = Color(0xFFF0F0F0),
+                                    unfocusedTextColor = Color.Black,
+                                    cursorColor = Color.DarkGray,
+                                    focusedIndicatorColor = Color(0xFFFFFFFF),
+                                    unfocusedIndicatorColor = Color.Gray,
+                                    focusedContainerColor = Color(0xFFD9D9D9)
+                                )
+                            )
 
 
-                        Spacer(modifier = Modifier.height(50.dp))
+                        } else {
+                            Text(
+                                text = aboutMe,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(18.dp))
+                                    .fillMaxWidth()
+                                    .padding(start = 5.dp),
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.W400
+                            )
+                        }
+                    }
 
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    // Güncelle Butonu
+                    FilledTonalButton(
+                        onClick = { isEditingAboutMe = false },
+                        modifier = Modifier
+                            .width(130.dp)
+                            .align(Alignment.CenterHorizontally),
+                        colors = ButtonDefaults.filledTonalButtonColors(Color(0xFF5091B1))
+                    ) {
+                        Text(text = "Güncelle", style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.W700), color = Color.White)
+                    }
+                    if (!isEditingAboutMe) {
+                        Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = "Mail: $mail",
-                            style = MaterialTheme.typography.headlineSmall,
+                            text = aboutMe,
+                            style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier
-                                .padding(start = 10.dp)
                                 .fillMaxWidth()
-                        )
-
-                        Spacer(modifier = Modifier.height(50.dp))
-
-                        Text(
-                            text ="Telefon: $phone",
-                            modifier = Modifier
-                                .padding(top = 50.dp, start = 10.dp)
-                                .fillMaxWidth(),
-                            style = MaterialTheme.typography.headlineSmall
+                                .clip(RoundedCornerShape(5.dp))
+                                .background(Color(0xFFD9D9D9)) // Gri arka plan eklendi
+                                .padding(10.dp)
                         )
                     }
+                        Spacer(modifier = Modifier.height(20.dp))
                 }
             }
         }
-
+    }
 }
+
 
 @Composable
 fun ProfileAvatar(avatar: ByteArray?, context: Context) {
@@ -178,13 +255,13 @@ fun ProfileAvatar(avatar: ByteArray?, context: Context) {
             .height(150.dp)
             .width(150.dp)
             .clip(CircleShape)
+            .padding(bottom = 5.dp)
     )
 }
 
-
 @Preview
 @Composable
-fun pre(){
+fun PreviewProfileScreen(){
     val db = AppDatabase.getDatabase(LocalContext.current)
     ProfileScreen(rememberNavController(), ProfileViewModel(db.santraDao()), LoginViewModel(db.santraDao()))
 }
