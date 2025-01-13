@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.santra.data.dao.SantraDao
 import com.example.santra.data.entities.GroupChatsTable
 import com.example.santra.data.entities.PostTable

@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.santra.data.dao.SantraDao
-import com.example.santra.data.entities.LoginTable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

@@ -291,7 +291,7 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
 
 @Preview
 @Composable
-fun asdf() {
+fun PreviewRegister() {
     val navController = rememberNavController()
     val db = AppDatabase.getDatabase(LocalContext.current)
     RegisterScreen(navController, RegisterViewModel(db.santraDao()))

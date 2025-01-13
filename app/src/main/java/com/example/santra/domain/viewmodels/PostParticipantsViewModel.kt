@@ -4,10 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.santra.data.dao.SantraDao
 import com.example.santra.data.entities.PostParticipantsTable
-import com.example.santra.data.entities.ProfileTable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -32,9 +30,6 @@ class PostParticipantsViewModel(private val santraDao: SantraDao): ViewModel() {
         }
 
     }
-
-//    private val _isFullParticipant = MutableLiveData<Boolean>()
-//    val isFullParticipant: LiveData<Boolean> get() = _isFullParticipant
 
     suspend fun isFull(postId: Int, maxParticipants: Int): Boolean {
             val currentCount = santraDao.getParticipantCount(postId)
